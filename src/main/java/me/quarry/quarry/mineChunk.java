@@ -55,7 +55,7 @@ public class mineChunk extends Thread {
         z=leftOff[2];
 
 
-        for (; y > 1; y--) {
+        for (; y > -63; y--) {
             for (; x < 16; x++) {
                 for (; z < 16; z++) {
                     try {

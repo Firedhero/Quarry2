@@ -32,130 +32,14 @@ public final class Quarry extends JavaPlugin {
 
 
         // Plugin startup logic
-        ItemStack result= new ItemStack(Material.DIAMOND_PICKAXE,1);
 
-        ItemMeta meta= result.getItemMeta();
+        //Adds the Items
+        new Items(this);
 
-        meta.setDisplayName(ChatColor.RED +"Big Dig");
-
-        result.setItemMeta(meta);
-
-        result.addEnchantment(Enchantment.DIG_SPEED,5);
-        result.addEnchantment(Enchantment.MENDING,1);
-        result.addEnchantment(Enchantment.DURABILITY,3);
-        result.addEnchantment(Enchantment.LOOT_BONUS_BLOCKS,3);
-
-        NamespacedKey key=new NamespacedKey(this, "Big_Dig");
-
-        ShapedRecipe recipe=new ShapedRecipe(key,result);
-        recipe.shape(
-                "DDD",
-                " P ",
-                "   "
-        );
-        recipe.setIngredient('D',Material.DIAMOND_BLOCK);
-        recipe.setIngredient('P',Material.DIAMOND_PICKAXE);
-
-        Bukkit.addRecipe(recipe);
-        //for magic stick
-
-        ItemStack stick= new ItemStack(Material.STICK,1);
-
-        ItemMeta meta3= stick.getItemMeta();
-
-        meta3.setDisplayName(ChatColor.RED +"Marker");
-
-        stick.setItemMeta(meta3);
-
-
-
-        NamespacedKey key3=new NamespacedKey(this, "Marker");
-
-        ShapedRecipe recipe3=new ShapedRecipe(key3,stick);
-        recipe3.shape(
-                " P ",
-                " F ",
-                "   "
-        );
-        recipe3.setIngredient('F',Material.STICK);
-        recipe3.setIngredient('P',Material.OBSIDIAN);
-
-        Bukkit.addRecipe(recipe3);
-        //testing for new quarry
-        ItemStack quarry= new ItemStack(Material.FURNACE,1);
-
-        ItemMeta meta2= quarry.getItemMeta();
-
-        meta2.setDisplayName(ChatColor.RED +"Quarry");
-
-        quarry.setItemMeta(meta2);
-
-
-
-        NamespacedKey key2=new NamespacedKey(this, "Quarry");
-
-        ShapedRecipe recipe2=new ShapedRecipe(key2,quarry);
-        recipe2.shape(
-                " P ",
-                " F ",
-                "   "
-        );
-        recipe2.setIngredient('F',Material.FURNACE);
-        recipe2.setIngredient('P',Material.DIAMOND_PICKAXE);
-
-        Bukkit.addRecipe(recipe2);
-//------------------------------------------------------------------------
-        ItemStack custom= new ItemStack(Material.STICK,1);
-
-        ItemMeta meta4= custom.getItemMeta();
-
-        meta4.setDisplayName(ChatColor.RED +"custom marker");
-
-        custom.setItemMeta(meta4);
-
-
-
-        NamespacedKey key4=new NamespacedKey(this, "Custom");
-
-        ShapedRecipe recipe4=new ShapedRecipe(key4,custom);
-        recipe4.shape(
-                " P ",
-                " F ",
-                "   "
-        );
-        recipe4.setIngredient('F',Material.STICK);
-        recipe4.setIngredient('P',Material.STICK);
-
-        Bukkit.addRecipe(recipe4);
-
-//        ---------------------------------------------------------------------------
-        ItemStack customQuarry= new ItemStack(Material.FURNACE,1);
-
-        ItemMeta meta5= custom.getItemMeta();
-
-        meta5.setDisplayName(ChatColor.RED +"Custom Quarry");
-
-        customQuarry.setItemMeta(meta5);
-
-
-
-        NamespacedKey key5=new NamespacedKey(this, "Custom_Quarry");
-
-        ShapedRecipe recipe5=new ShapedRecipe(key5,customQuarry);
-        recipe5.shape(
-                "P P",
-                " F ",
-                "   "
-        );
-        recipe5.setIngredient('F',Material.FURNACE);
-        recipe5.setIngredient('P',Material.DIAMOND_PICKAXE);
-
-        Bukkit.addRecipe(recipe5);
-//        -------------------------------------------------------------
         map=map.readMap();
         custMap=custMap.readMap();
         initializeRunningQuarrys();
-    getServer().getPluginManager().registerEvents(new Miner(quarryThis),this);
+        getServer().getPluginManager().registerEvents(new Miner(quarryThis),this);
 
     }
 
@@ -287,9 +171,9 @@ public final class Quarry extends JavaPlugin {
                 Block bloc=Bukkit.getServer().getWorld("world").getBlockAt(x,y,z);
 //                Bukkit.getServer().getWorld("world").loadChunk(chunl);
 
-                        //TODO add chest is full to switch to breaking naturall again
+                /*TODO add chest is full add items to a hidden list that will be added to the chest when
+                   is removed */
 
-                        //TODO---------------------------------------------------------
 
                 bloc.breakNaturally();
 //                bloc.getWorld().unloadChunk(chunl);
