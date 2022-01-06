@@ -1,6 +1,5 @@
 package me.quarry.quarry;
 import java.lang.Math;
-import com.google.common.util.concurrent.AbstractScheduledService;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -8,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
-import org.graalvm.compiler.lir.alloc.lsra.LinearScan;
 
 public class mineChunk extends Thread {
     Chunk breakChunk;
