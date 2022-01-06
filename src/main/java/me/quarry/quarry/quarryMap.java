@@ -18,6 +18,7 @@ public class quarryMap {
 
     public void saveMap(){
         //for storing the locations;
+
         File file = new File("plugins/hashMapLocations.txt");
         File file2 = new File("plugins/hashMinerData.txt");
         //for storing objects

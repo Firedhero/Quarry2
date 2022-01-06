@@ -24,7 +24,6 @@ public class Miner implements Listener {
     private Location customLocation;
     private Quarry quarryThis;
     private Chunk breakChunk;
-    private ChunkSnapshot snap;
     private int id;
     minerData quarry;
     customData customQuarry;
@@ -89,12 +88,10 @@ public class Miner implements Listener {
     @EventHandler
     public void work(BlockPlaceEvent event){
         user=event.getPlayer();
-        snap=event.getBlockPlaced().getChunk().getChunkSnapshot();
         ItemStack meta=user.getInventory().getItemInMainHand();
         if(meta.getItemMeta().getDisplayName().equals(ChatColor.RED+"Quarry")) {
             quarryLocation = event.getBlockPlaced().getLocation();
             breakChunk=quarryLocation.getWorld().getChunkAt(quarryLocation);
-//            user.sendMessage("chunk "+breakChunk.getBlock(-0,0,0)+" , ");
             user.sendMessage("You placed a Quarry");
             quarry=new minerData();
             quarry.setQuarryLocation(quarryLocation);
@@ -153,7 +150,7 @@ public class Miner implements Listener {
                 user.sendMessage("You Clicked a Quarry now running");
                 miner.setRunning(true);
                 quarryThis.map.map.put(event.getClickedBlock().getLocation(),miner);
-                quarryThis.runMiner(miner.quarryLocation,miner.chunk,user,miner.Id);
+                quarryThis.runMiner(miner.quarryLocation,miner.chunk,miner.Id);
 //                mineChun();
             }
             //TODO-END--------------------------------------
@@ -190,11 +187,11 @@ public class Miner implements Listener {
                 custMiner.setRunning(false);
                 quarryThis.custMap.map.put(event.getClickedBlock().getLocation(), custMiner);
             }else{
-                if (!spots.isEmpty()) {
+                if (!spots.isEmpty()&&spots.size()<=2) {
                     custMiner.setRunning(true);
                     custMiner.setMarkedSpots(spots);
                     quarryThis.custMap.map.put(event.getClickedBlock().getLocation(), custMiner);
-                    quarryThis.runCustom(event.getClickedBlock().getLocation());
+//                    quarryThis.runCustom(event.getClickedBlock().getLocation());
                     spots = new HashMap<>();
                 }else{
                     user.sendMessage("You need to mark spots for the quarry to run");
@@ -205,50 +202,9 @@ public class Miner implements Listener {
         }
 
     }
+
     HashMap<Location,Location>spots=new HashMap<>();
-
     Location markedChest = null;
-
-    public void mine(int x,int y,int z,int bottom){
-//        BukkitRunnable task=new BukkitRunnable() {
-//            @Override
-//            public void run() {
-                Block brokenBlock;
-
-
-                for(int depth=y-1;depth>0;depth--) {
-                    for (int i = x - 1; i < x + 2; i++) {
-                        for (int j = z - 1; j < z + 2; j++) {
-                            brokenBlock=quarryLocation.getWorld().getBlockAt(i,depth,j);
-                            brokenBlock.getDrops();
-                            brokenBlock.breakNaturally();
-//                            Bukkit.broadcastMessage("attempting to mine block at "+x+" , "+depth+" , "+j);
-
-                            //to place broken blocks in a designated chest
-//                            if (evt.getPlayer().getGameMode().equals(GameMode.CREATIVE))
-//                                return;
-//                            evt.getPlayer().setExp(evt.getPlayer().getExp() + evt.getExpToDrop());
-//                            Collection<ItemStack> drops = evt.getBlock().getDrops(evt.getPlayer().getItemInHand());
-//
-//                            for (ItemStack drop : drops) {
-//                                evt.getPlayer().getInventory().addItem(drop);
-//                            }
-//                            evt.getBlock().setType(Material.AIR);
-//                            evt.setCancelled(true);
-
-
-                        }
-                    }
-                }
-//            }
-//        };
-//        task.runTaskLater( quarryThis,20*3);
-    }
-    public void  mineChun() {
-
-        quarryThis.runMiner(quarryLocation,breakChunk,user,id);
-
-    }
 
 //only works for northEast
     public void breakDiag(int bLocX, int bLocY, int z) {

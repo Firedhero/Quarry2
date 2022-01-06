@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.block.Chest;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public final class Quarry extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        
 
 
         // Plugin startup logic
@@ -38,8 +40,18 @@ public final class Quarry extends JavaPlugin {
 
         map=map.readMap();
         custMap=custMap.readMap();
-        initializeRunningQuarrys();
+        savedDataFilesExist();
+
         getServer().getPluginManager().registerEvents(new Miner(quarryThis),this);
+
+    }
+
+    private void savedDataFilesExist() {
+        //file checks
+        File file = new File("plugins/hashMapLocations.txt");
+        File file2 = new File("plugins/hashMinerData.txt");
+        if(file.exists()&& file2.exists())
+            initializeRunningQuarrys();
 
     }
 
@@ -55,30 +67,18 @@ public final class Quarry extends JavaPlugin {
 
         }
     }
-    mineCustom customMiner;
-    public void runCustom(Location quarryLoc){
-
-        this.customMiner=new mineCustom(this,quarryLoc);
-        Thread thread=new Thread(this.customMiner);
-        this.customMiner.setThread(thread);
-        thread.start();
-
-    }
-
-
-
-
-
+//    mineCustom customMiner;
+//    public void runCustom(Location quarryLoc){
+//
+//        this.customMiner=new mineCustom(this,quarryLoc);
+//        Thread thread=new Thread(this.customMiner);
+//        this.customMiner.setThread(thread);
+//        thread.start();
+//
+//    }
 
     //makes thread for a miner
     mineChunk miner;
-
-    public void runMiner(Location quarryLoc, Chunk breakChun, Player user, int id){
-        this.miner=new mineChunk(quarryLoc,breakChun,user,this,id);
-        Thread thread=new Thread(this.miner);
-        this.miner.setThread(thread);
-        thread.start();
-    }
     public void runMiner(Location quarryLoc, Chunk breakChun,int id){
         this.miner=new mineChunk(quarryLoc,breakChun,this,id);
         Thread thread=new Thread(this.miner);
@@ -133,7 +133,7 @@ public final class Quarry extends JavaPlugin {
                         }
                         boolean canContainitem = foundcount <= 0;
                         //-----------------------------------------------------------------------
-
+//                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
                         if(canContainitem||hasEmptySlot) {
                             Collection<ItemStack> drops = bloc.getDrops();
                             for (ItemStack drop : drops) {
@@ -142,6 +142,8 @@ public final class Quarry extends JavaPlugin {
                             }
                             bloc.setType(Material.AIR);
                         }else {
+                            //TODO add methoad to store items in file to add to chest, as chest empties useing
+//                             a hashmap as items removed from chest check bloc value to see if item stored on file
                             bloc.breakNaturally();
                         }
                     }
