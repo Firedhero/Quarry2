@@ -89,27 +89,6 @@ public class eventListner implements Listener {
             quarryLocation = event.getBlockPlaced().getLocation();
             breakChunk=quarryLocation.getWorld().getChunkAt(quarryLocation);
             user.sendMessage("You placed a Quarry");
-
-
-            final JFrame parent = new JFrame();
-            JButton button = new JButton();
-
-            button.setText("Click me to show dialog!");
-            parent.add(button);
-            parent.pack();
-            parent.setVisible(true);
-
-            button.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    String name = JOptionPane.showInputDialog(parent,
-                            "What is your name?", null);
-                }
-            });
-
-
-
-
             quarry=new minerData();
             quarry.setQuarryLocation(quarryLocation);
             quarry.setChunk(breakChunk);
@@ -141,6 +120,7 @@ public class eventListner implements Listener {
             user.sendMessage("Quarry broken");
         }
     }
+
     @EventHandler
     public void qClick(PlayerInteractEvent event){
         user=event.getPlayer();
@@ -151,6 +131,29 @@ public class eventListner implements Listener {
             itemName= Objects.requireNonNull(mainHand.getItemMeta()).getDisplayName();
         }catch (Exception e){
             itemName="";
+        }
+
+//        TODO make most events if statments that call methoads to clean up bulk in click listner
+
+//        TODO add in frames that popup displaying all placed quarries stored inventory
+
+
+        if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& itemName.equals(ChatColor.RED + "Stick Of Holding")) {
+            final JFrame parent = new JFrame();
+            JButton button = new JButton();
+
+            button.setText("Click me to show dialog!");
+            parent.add(button);
+            parent.pack();
+            parent.setVisible(true);
+
+            button.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    String name = JOptionPane.showInputDialog(parent,
+                            "What is your name?", null);
+                }
+            });
         }
 
 
