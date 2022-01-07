@@ -85,6 +85,10 @@ public final class Quarry extends JavaPlugin {
 
     //connects to main thread to updates blocks
     public void changeBlock(Chunk chunl,int x,int y,int z,Location quarryLocation){
+
+//        TODO add liquid detection so it changes the blocks immediatly to the right of mined block and addes (stone/sponge)
+//         to prevent liquids from causing lag
+
         BukkitRunnable runner=new BukkitRunnable() {
             @Override
             public void run() {
