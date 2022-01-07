@@ -2,21 +2,18 @@ package me.quarry.quarry;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.Powerable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.swing.*;
 import java.util.*;
-import java.util.jar.JarEntry;
 
-public class Miner implements Listener {
+public class eventListner implements Listener {
     private Location player;
     private  Player user;
     private Location quarryLocation;
@@ -27,7 +24,7 @@ public class Miner implements Listener {
     minerData quarry;
     customData customQuarry;
 
-    public Miner(Quarry quarry) {
+    public eventListner(Quarry quarry) {
         quarryThis=quarry;
     }
 
@@ -123,6 +120,7 @@ public class Miner implements Listener {
             user.sendMessage("Quarry broken");
         }
     }
+
     @EventHandler
     public void qClick(PlayerInteractEvent event){
         user=event.getPlayer();
@@ -133,6 +131,31 @@ public class Miner implements Listener {
             itemName= Objects.requireNonNull(mainHand.getItemMeta()).getDisplayName();
         }catch (Exception e){
             itemName="";
+        }
+
+//        TODO make most events if statments that call methoads to clean up bulk in click listner
+
+//        TODO add in frames that popup displaying all placed quarries stored inventory
+
+
+        if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& itemName.equals(ChatColor.RED + "Stick Of Holding")) {
+            final JFrame parent = new JFrame();
+            //all selection options should be buttons or have a drop down menu
+            //also make visibility of menu see thru ish
+            JButton button = new JButton();
+
+            button.setText("Click me to show dialog!");
+            parent.add(button);
+            parent.pack();
+            parent.setVisible(true);
+
+            button.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    String name = JOptionPane.showInputDialog(parent,
+                            "What is your name?", null);
+                }
+            });
         }
 
 
