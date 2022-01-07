@@ -140,6 +140,8 @@ public class eventListner implements Listener {
 
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& itemName.equals(ChatColor.RED + "Stick Of Holding")) {
             final JFrame parent = new JFrame();
+            //all selection options should be buttons or have a drop down menu
+            //also make visibility of menu see thru ish
             JButton button = new JButton();
 
             button.setText("Click me to show dialog!");
