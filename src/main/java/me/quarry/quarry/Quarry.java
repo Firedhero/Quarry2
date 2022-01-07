@@ -3,22 +3,14 @@ package me.quarry.quarry;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.block.Chest;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class Quarry extends JavaPlugin {
@@ -31,7 +23,12 @@ public final class Quarry extends JavaPlugin {
     @Override
     public void onEnable() {
         
-
+//      TODO add an automatic tree farmer possible another plugin
+        /*
+        TODO save what player placed what quarry
+         add a popup menu for what quarrys a player has placed
+         add a way for player to pick which quarry from list instead of the stick
+         */
 
         // Plugin startup logic
 
@@ -42,7 +39,7 @@ public final class Quarry extends JavaPlugin {
         custMap=custMap.readMap();
         savedDataFilesExist();
 
-        getServer().getPluginManager().registerEvents(new Miner(quarryThis),this);
+        getServer().getPluginManager().registerEvents(new eventListner(quarryThis),this);
 
     }
 
@@ -85,9 +82,7 @@ public final class Quarry extends JavaPlugin {
         this.miner.setThread(thread);
         thread.start();
     }
-    public void updateMinerStatus(boolean status){
-        this.miner.setRunning(status);
-    }
+
     //connects to main thread to updates blocks
     public void changeBlock(Chunk chunl,int x,int y,int z,Location quarryLocation){
         BukkitRunnable runner=new BukkitRunnable() {
@@ -144,18 +139,19 @@ public final class Quarry extends JavaPlugin {
                         }else {
                             //TODO add methoad to store items in file to add to chest, as chest empties useing
 //                             a hashmap as items removed from chest check bloc value to see if item stored on file
+                            saveMinedItems(bloc);
                             bloc.breakNaturally();
                         }
                     }
 
                 }
+                saveMinedItems(bloc);
                 bloc.breakNaturally();
-//                bloc.getWorld().unloadChunk(chunl);
-//                bloc.getWorld().loadChunk(chunl);
             }
+
+
         };runner.runTask(this);
 
-//        Bukkit.broadcastMessage("Updating block");
     }
     @Override
     public void onDisable() {
@@ -164,7 +160,9 @@ public final class Quarry extends JavaPlugin {
         custMap.saveMap();
 
     }
-
+    void saveMinedItems(Block bloc) {
+        savedChestItems newSave;
+    }
 
     public void changeBlock(int x, int y, int z) {
         BukkitRunnable runner=new BukkitRunnable() {
