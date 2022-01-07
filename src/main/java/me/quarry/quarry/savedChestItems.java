@@ -14,7 +14,7 @@ public class savedChestItems {
 
     }
 
-    private void saveItems() throws IOException {
+    private void saveItems(String chestQuarryId) throws IOException {
         if (chestFile.exists()){
             writer=new FileWriter("plugins/chestItems.txt",true);
             bWriter=new BufferedWriter(writer);

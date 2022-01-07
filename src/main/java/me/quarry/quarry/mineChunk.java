@@ -89,7 +89,8 @@ public class mineChunk extends Thread {
 //            Bukkit.broadcastMessage("Finished Y");
 
         }
-        quarry.map.map.get(quarryLocation).isRunning=false;
+        if (quarry.map.map.get(quarryLocation) != null)
+            quarry.map.map.get(quarryLocation).isRunning=false;
     }
     void changeBlock(Chunk chunk,int x,int y,int z){
         Block bloc=chunk.getBlock(x,y,z);

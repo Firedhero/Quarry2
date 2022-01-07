@@ -6,9 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import javax.swing.*;
 import java.util.*;
 
 public class eventListner implements Listener {
@@ -87,6 +89,27 @@ public class eventListner implements Listener {
             quarryLocation = event.getBlockPlaced().getLocation();
             breakChunk=quarryLocation.getWorld().getChunkAt(quarryLocation);
             user.sendMessage("You placed a Quarry");
+
+
+            final JFrame parent = new JFrame();
+            JButton button = new JButton();
+
+            button.setText("Click me to show dialog!");
+            parent.add(button);
+            parent.pack();
+            parent.setVisible(true);
+
+            button.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    String name = JOptionPane.showInputDialog(parent,
+                            "What is your name?", null);
+                }
+            });
+
+
+
+
             quarry=new minerData();
             quarry.setQuarryLocation(quarryLocation);
             quarry.setChunk(breakChunk);
