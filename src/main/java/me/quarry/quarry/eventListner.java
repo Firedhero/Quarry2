@@ -2,21 +2,16 @@ package me.quarry.quarry;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.Powerable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-import java.util.jar.JarEntry;
 
-public class Miner implements Listener {
+public class eventListner implements Listener {
     private Location player;
     private  Player user;
     private Location quarryLocation;
@@ -27,7 +22,7 @@ public class Miner implements Listener {
     minerData quarry;
     customData customQuarry;
 
-    public Miner(Quarry quarry) {
+    public eventListner(Quarry quarry) {
         quarryThis=quarry;
     }
 
