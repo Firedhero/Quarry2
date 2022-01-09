@@ -4,6 +4,7 @@ package me.quarry.quarry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -93,8 +94,7 @@ public final class Quarry extends JavaPlugin {
             @Override
             public void run() {
                 Block bloc=chunl.getBlock(x,y,z);
-                //Checks if it is water
-                detecWater(chunl,x,y,z);
+
                 if(map.map.get(quarryLocation).chestLocation!=null){
                     Location chestLoc=map.map.get(quarryLocation).chestLocation;
                     if(chestLoc.getBlock().getType()!=Material.CHEST){
@@ -137,17 +137,21 @@ public final class Quarry extends JavaPlugin {
                             for (ItemStack drop : drops) {
                                 chest.getInventory().addItem(drop);
                             }
+                            //Checks if it is water
+                            detecWater(chunl,x,y,z);
                             bloc.setType(Material.AIR);
                         }else {
                             //TODO add methoad to store items in file to add to chest, as chest empties useing
 //                             a hashmap as items removed from chest check bloc value to see if item stored on file
                             saveMinedItems(bloc);
+                            detecWater(chunl,x,y,z);
                             bloc.breakNaturally();
                         }
                     }
 
                 }
                 saveMinedItems(bloc);
+                detecWater(chunl,x,y,z);
                 bloc.breakNaturally();
             }
 
@@ -159,35 +163,85 @@ public final class Quarry extends JavaPlugin {
     private void detecWater(Chunk chunk,int x, int y, int z) {
         Block block;
         World world=chunk.getWorld();
-        int worldX=chunk.getBlock(x,y,z).getLocation().getBlockX();
-        int worldZ=chunk.getBlock(x,y,z).getLocation().getBlockZ();
-        if(x==0){
-            worldX=-1;
-            block=world.getBlockAt(worldX,y,z);
-            if(block.isLiquid()){
-                block.setType(Material.COBBLESTONE);
-            }
+
+        if (chunk.getBlock(x,y,z).isLiquid()){
+            chunk.getBlock(x,y,z).setType(Material.SPONGE);
+            chunk.getBlock(x,y,z).setType(Material.AIR);
         }
-        if(x==15){
-            worldX=+1;
-            block=world.getBlockAt(worldX,y,z);
+
+
+        //border detection
+        Location location=chunk.getBlock(x,y,z).getLocation();
+        int worldX= (int) location.getX();
+        int worldZ= (int) location.getZ();
+        if(x==0&&z==0){
+            block=world.getBlockAt(worldX-1,y,worldZ-1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
+            checkWaterLogged(chunk,worldX,y,worldZ);
+        }
+        if (x==0){
+            block=world.getBlockAt(worldX-1,y, worldZ);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+            checkWaterLogged(chunk,worldX,y,worldZ);
+        }
+        if (x==15){
+            block=world.getBlockAt(worldX+1,y,worldZ);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+            checkWaterLogged(chunk,worldX,y,worldZ);
+        }
+        if (x==15&&z==0){
+            block=world.getBlockAt(worldX+1,y,worldZ-1);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+            checkWaterLogged(chunk,worldX,y,worldZ);
         }
         if (z==0){
-            worldZ=-1;
-            block=world.getBlockAt(x,y,worldZ);
+            block=world.getBlockAt(worldX,y,worldZ-1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
+            checkWaterLogged(chunk,worldX,y,worldZ);
         }
         if (z==15){
-            worldZ=+1;
-            block=world.getBlockAt(x,y,worldZ);
+            block=world.getBlockAt(worldX,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
+            checkWaterLogged(chunk,worldX,y,worldZ);
+        }
+        if (z==15&&x==0){
+            block=world.getBlockAt(worldX-1,y,worldZ+1);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+            checkWaterLogged(chunk,worldX,y,worldZ);
+        }
+        if(x==15&&z==15){
+            block=world.getBlockAt(worldX+1,y,worldZ+1);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+            checkWaterLogged(chunk,worldX,y,worldZ);
+        }
+
+    }
+
+    private void checkWaterLogged(Chunk chunk,int x,int y,int z) {
+        boolean waterLogged=false;
+        if (chunk.getBlock(x,y,z).getBlockData() instanceof Waterlogged){
+            Waterlogged water=(Waterlogged) chunk.getBlock(x,y,z).getBlockData();
+            waterLogged=water.isWaterlogged();
+        }
+        if (waterLogged){
+            chunk.getBlock(x,y,z).breakNaturally();
+            chunk.getBlock(x,y,z).setType(Material.COBBLESTONE);
         }
     }
 
