@@ -95,14 +95,11 @@ public final class Quarry extends JavaPlugin {
                 Block bloc=chunl.getBlock(x,y,z);
                 //Checks if it is water
                 detecWater(chunl,x,y,z);
-//                Bukkit.getServer().getWorld("world").loadChunk(chunl);
                 if(map.map.get(quarryLocation).chestLocation!=null){
                     Location chestLoc=map.map.get(quarryLocation).chestLocation;
                     if(chestLoc.getBlock().getType()!=Material.CHEST){
                         map.map.get(quarryLocation).chestLocation=null;
                     }else {
-//                    Block chestBlock=chestLoc.getBlock();
-//                    BlockState chestState = chestBlock.getState();
 
                         Chest chest = (Chest) chestLoc.getBlock().getState();
                         Inventory inventory=chest.getInventory();
@@ -139,7 +136,6 @@ public final class Quarry extends JavaPlugin {
                             Collection<ItemStack> drops = bloc.getDrops();
                             for (ItemStack drop : drops) {
                                 chest.getInventory().addItem(drop);
-//                            map.map.get(quarryLocation).chest.customChest.addItem(drop);
                             }
                             bloc.setType(Material.AIR);
                         }else {
@@ -164,7 +160,7 @@ public final class Quarry extends JavaPlugin {
         Block block;
         World world=chunk.getWorld();
         int worldX=chunk.getBlock(x,y,z).getLocation().getBlockX();
-        int worldY=chunk.getBlock(x,y,z).getLocation().getBlockY();
+        int worldZ=chunk.getBlock(x,y,z).getLocation().getBlockZ();
         if(x==0){
             worldX=-1;
             block=world.getBlockAt(worldX,y,z);
@@ -179,16 +175,16 @@ public final class Quarry extends JavaPlugin {
                 block.setType(Material.COBBLESTONE);
             }
         }
-        if (y==0){
-            worldY=-1;
-            block=world.getBlockAt(x,worldY,z);
+        if (z==0){
+            worldZ=-1;
+            block=world.getBlockAt(x,y,worldZ);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
         }
-        if (y==15){
-            worldY=+1;
-            block=world.getBlockAt(x,worldY,z);
+        if (z==15){
+            worldZ=+1;
+            block=world.getBlockAt(x,y,worldZ);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
