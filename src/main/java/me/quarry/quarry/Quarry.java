@@ -93,6 +93,8 @@ public final class Quarry extends JavaPlugin {
             @Override
             public void run() {
                 Block bloc=chunl.getBlock(x,y,z);
+                //Checks if it is water
+                detecWater(chunl,x,y,z);
 //                Bukkit.getServer().getWorld("world").loadChunk(chunl);
                 if(map.map.get(quarryLocation).chestLocation!=null){
                     Location chestLoc=map.map.get(quarryLocation).chestLocation;
@@ -157,6 +159,42 @@ public final class Quarry extends JavaPlugin {
         };runner.runTask(this);
 
     }
+
+    private void detecWater(Chunk chunk,int x, int y, int z) {
+        Block block;
+        World world=chunk.getWorld();
+        int worldX=chunk.getBlock(x,y,z).getLocation().getBlockX();
+        int worldY=chunk.getBlock(x,y,z).getLocation().getBlockY();
+        if(x==0){
+            worldX=-1;
+            block=world.getBlockAt(worldX,y,z);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+        }
+        if(x==15){
+            worldX=+1;
+            block=world.getBlockAt(worldX,y,z);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+        }
+        if (y==0){
+            worldY=-1;
+            block=world.getBlockAt(x,worldY,z);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+        }
+        if (y==15){
+            worldY=+1;
+            block=world.getBlockAt(x,worldY,z);
+            if(block.isLiquid()){
+                block.setType(Material.COBBLESTONE);
+            }
+        }
+    }
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
