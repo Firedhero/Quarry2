@@ -165,7 +165,6 @@ public final class Quarry extends JavaPlugin {
         World world=chunk.getWorld();
 
         if (chunk.getBlock(x,y,z).isLiquid()){
-            chunk.getBlock(x,y,z).setType(Material.SPONGE);
             chunk.getBlock(x,y,z).setType(Material.AIR);
         }
 
