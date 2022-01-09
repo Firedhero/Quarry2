@@ -235,7 +235,7 @@ public final class Quarry extends JavaPlugin {
     private void checkWaterLogged(Chunk chunk,int x,int y,int z) {
         boolean waterLogged=false;
         World world=chunk.getWorld();
-        if (chunk.getBlock(x,y,z).getBlockData() instanceof Waterlogged){
+        if (world.getBlockAt(x,y,z).getBlockData() instanceof Waterlogged){
             Waterlogged water=(Waterlogged) world.getBlockAt(x,y,z).getBlockData();
             waterLogged=water.isWaterlogged();
         }
