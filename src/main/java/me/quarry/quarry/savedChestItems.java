@@ -29,12 +29,12 @@ public class savedChestItems {
 
             this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt",true);
             this.bWriter=new BufferedWriter(writer);
-            this.bWriter.append(minedBlock.toString());
+            this.bWriter.append(minedBlock.getType().toString());
 
 
 
         }else{
-            this.writer=new FileWriter("plugins/chestItems/"+chestQuarryId+".txt");
+            this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
             this.bWriter=new BufferedWriter(writer);
 
         }
