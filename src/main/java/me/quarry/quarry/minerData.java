@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.io.Serializable;
@@ -40,9 +41,7 @@ public class minerData implements Serializable {
     public void setPos(int x,int y,int z) {
         this.pos=new int[]{x,y,z};
     }
-    Location chestLocation;
-    Location quarryLocation;
-    Chunk chunk;
+
 
     public int getId() {
         return Id;
@@ -65,7 +64,19 @@ public class minerData implements Serializable {
     int minedBlocksNumber;
     int[]pos;//for left off at
     Inventory chestInventory;
+    Location chestLocation;
+    Location quarryLocation;
+    Chunk chunk;
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    Player player;
 
     public void setChestLocation(Location chestLocation) {
 

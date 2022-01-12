@@ -10,8 +10,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class mineChunk extends Thread {
     Chunk breakChunk;
-    ChunkSnapshot snap;
-    Chunk clone;
 
     public Location getQuarryLocation() {
         return quarryLocation;
@@ -44,8 +42,6 @@ public class mineChunk extends Thread {
     public void run() {
         isRunning=true;
 
-//        BlockData broken;
-        Block block;
         int[]leftOff=quarry.map.map.get(quarryLocation).getPos();
         int x,y,z;
         x=leftOff[0];
@@ -68,8 +64,8 @@ public class mineChunk extends Thread {
     //                            e.printStackTrace();
                                 }
                             }
-                            Chunk chunk = breakChunk.getWorld().getChunkAt(quarryLocation);
-                            quarry.changeBlock(chunk, x, y, z,quarryLocation);
+//                            Chunk chunk = breakChunk.getWorld().getChunkAt(quarryLocation);
+                            quarry.changeBlock(breakChunk, x, y, z,quarryLocation);
                             quarry.map.map.get(quarryLocation).setPos(x,y,z);
                             try {
                                 sleep(100);
@@ -92,25 +88,19 @@ public class mineChunk extends Thread {
         if (quarry.map.map.get(quarryLocation) != null)
             quarry.map.map.get(quarryLocation).isRunning=false;
     }
-    void changeBlock(Chunk chunk,int x,int y,int z){
-        Block bloc=chunk.getBlock(x,y,z);
-        bloc.setType(Material.AIR);
-        bloc.getWorld().unloadChunk(chunk);
-        bloc.getWorld().loadChunk(chunk);
-    }
     mineChunk(Location quarryLoc, Chunk breakChun,Quarry q,int id){
 
         quarryLocation=quarryLoc;
         breakChunk=breakChun;
         quarry=q;
     }
-    int id;
-    mineChunk(Location quarryLoc, Chunk breakChun, Player user,Quarry q,int id){
+    mineChunk(Location quarryLoc, Chunk breakChun, Player user,Quarry q){
 
         player=user;
         quarryLocation=quarryLoc;
         breakChunk=breakChun;
         quarry=q;
+
     }
     mineChunk(){
 
