@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -144,14 +145,22 @@ public final class Quarry extends JavaPlugin {
                         }else {
                             //TODO add methoad to store items in file to add to chest, as chest empties useing
 //                             a hashmap as items removed from chest check bloc value to see if item stored on file
-                            saveMinedItems(bloc);
+                            try {
+                                saveMinedItems(bloc);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             detecWater(chunl,x,y,z);
                             bloc.breakNaturally();
                         }
                     }
 
                 }
-                saveMinedItems(bloc);
+                try {
+                    saveMinedItems(bloc);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 detecWater(chunl,x,y,z);
                 bloc.breakNaturally();
             }
@@ -253,8 +262,8 @@ public final class Quarry extends JavaPlugin {
         custMap.saveMap();
 
     }
-    void saveMinedItems(Block bloc) {
-        savedChestItems newSave;
+    void saveMinedItems(Block bloc) throws IOException {
+        savedItems.saveItems((int)this.miner.getId(),bloc);
     }
 
     public void changeBlock(int x, int y, int z) {

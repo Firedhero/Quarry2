@@ -16,7 +16,7 @@ public class Items {
         addCustomSizeMarker(context);
     }
 
-    private void addCustomSizeMarker(Quarry context) {
+    private void addCustomSizeQuarry(Quarry context) {
         ItemStack customQuarry= new ItemStack(Material.FURNACE,1);
         ItemMeta meta= customQuarry.getItemMeta();
         meta.setDisplayName(ChatColor.RED +"Custom Quarry");
@@ -35,7 +35,7 @@ public class Items {
         Bukkit.addRecipe(recipe);
     }
 
-    private void addCustomSizeQuarry(Quarry context) {ItemStack custom= new ItemStack(Material.STICK,1);
+    private void addCustomSizeMarker(Quarry context) {ItemStack custom= new ItemStack(Material.STICK,1);
 
         ItemMeta meta= custom.getItemMeta();
         meta.setDisplayName(ChatColor.RED +"custom marker");
