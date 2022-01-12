@@ -24,10 +24,10 @@ public class savedChestItems {
 //              make joint file with a array of materials and the file is updated as the list is updated
 
     public void saveItems(int chestQuarryId, Block minedBlock) throws IOException {
-        chestFile= new File("plugins/chestItems/" + chestQuarryId + ".txt");
+        chestFile= new File("plugins/chestItems/inventoryForQuarry_" + chestQuarryId + ".txt");
         if (chestFile.exists()){
 
-            this.writer=new FileWriter("plugins/chestItems/"+chestQuarryId+".txt",true);
+            this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt",true);
             this.bWriter=new BufferedWriter(writer);
             this.bWriter.append(minedBlock.toString());
 
