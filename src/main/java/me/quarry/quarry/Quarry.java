@@ -241,8 +241,8 @@ public final class Quarry extends JavaPlugin {
             waterLogged=water.isWaterlogged();
         }
         if (waterLogged){
-            chunk.getBlock(x,y,z).breakNaturally();
-            chunk.getBlock(x,y,z).setType(Material.COBBLESTONE);
+            world.getBlockAt(x,y,z).breakNaturally();
+            world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
         }
     }
 
