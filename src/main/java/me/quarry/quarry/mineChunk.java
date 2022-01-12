@@ -94,8 +94,7 @@ public class mineChunk extends Thread {
         breakChunk=breakChun;
         quarry=q;
     }
-    int id;
-    mineChunk(Location quarryLoc, Chunk breakChun, Player user,Quarry q,int id){
+    mineChunk(Location quarryLoc, Chunk breakChun, Player user,Quarry q){
 
         player=user;
         quarryLocation=quarryLoc;

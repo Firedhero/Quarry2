@@ -102,7 +102,7 @@ public class eventListner implements Listener {
                     id++;
                 quarry.setId(id);
             }
-
+            quarry.setPlayer(user);
             quarryThis.map.map.put(quarryLocation,quarry);
 
         }
