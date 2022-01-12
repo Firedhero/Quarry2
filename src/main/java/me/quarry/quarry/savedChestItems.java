@@ -1,6 +1,7 @@
 package me.quarry.quarry;
 
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.io.BufferedWriter;
@@ -29,14 +30,28 @@ public class savedChestItems {
 
             this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt",true);
             this.bWriter=new BufferedWriter(writer);
-            this.bWriter.append(minedBlock.getType().toString());
 
-
+            if(!checkUnwanted(minedBlock))
+                this.bWriter.write(minedBlock.getType() +":");
 
         }else{
             this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
             this.bWriter=new BufferedWriter(writer);
-
         }
+        this.bWriter.close();
+        this.writer.close();
+    }
+
+    private boolean checkUnwanted(Block block) {
+
+        Material material=block.getType();
+        switch (material){
+            case AIR:
+            case WATER:
+            case LAVA:
+                return true;
+        }
+
+        return false;
     }
 }
