@@ -20,6 +20,7 @@ public final class Quarry extends JavaPlugin {
     Thread mine;
     quarryMap map=new quarryMap();
     customMap custMap=new customMap();
+    savedChestItems savedItems=new savedChestItems();
 
     @Override
     public void onEnable() {

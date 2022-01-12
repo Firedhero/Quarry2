@@ -36,7 +36,7 @@ public class quarryMap {
 
                 // put key and value separated by a colon
                 bf.write(entry.getKey() + " ");
-                bo.write(entry.getValue().quarryLocation+":"+entry.getValue().getChunk().getX()+":"+entry.getValue().getChunk().getZ()+":"+ Arrays.toString(entry.getValue().getPos())+":"+entry.getValue().chestLocation+":"+entry.getValue().isRunning());
+                bo.write(entry.getValue().quarryLocation+":"+entry.getValue().getChunk().getX()+":"+entry.getValue().getChunk().getZ()+":"+ Arrays.toString(entry.getValue().getPos())+":"+entry.getValue().chestLocation+":"+entry.getValue().isRunning()+":"+entry.getValue().Id);
                 // new line
                 bf.newLine();
                 bo.newLine();

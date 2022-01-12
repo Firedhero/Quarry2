@@ -92,12 +92,15 @@ public class eventListner implements Listener {
             quarry=new minerData();
             quarry.setQuarryLocation(quarryLocation);
             quarry.setChunk(breakChunk);
+            //relative to chunk
             quarry.setPos(0,(int)quarryLocation.getY()-1,0);
             if(quarryThis.map==null){
                 id=0;
+                quarry.setId(id);
             }else{
                 for(int i=0;i<quarryThis.map.map.size();i++)
                     id++;
+                quarry.setId(id);
             }
 
             quarryThis.map.map.put(quarryLocation,quarry);
@@ -136,6 +139,7 @@ public class eventListner implements Listener {
 //        TODO make most events if statments that call methoads to clean up bulk in click listner
 
 //        TODO add in frames that popup displaying all placed quarries stored inventory
+        //  --------------------------------------------------------
 
 
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& itemName.equals(ChatColor.RED + "Stick Of Holding")) {
@@ -157,7 +161,7 @@ public class eventListner implements Listener {
                 }
             });
         }
-
+//--------------------------------------------------------------------------------------------------
 
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& quarryThis.map.map.containsKey(event.getClickedBlock().getLocation())&& !itemName.equals(ChatColor.RED + "Marker")){//
             event.setCancelled(true);//cancels furnace menu

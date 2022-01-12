@@ -18,6 +18,9 @@ public class savedChestItems {
         if (chestFile.exists()){
             writer=new FileWriter("plugins/chestItems.txt",true);
             bWriter=new BufferedWriter(writer);
+
+
+
         }else{
 
         }
