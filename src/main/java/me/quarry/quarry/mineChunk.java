@@ -25,7 +25,7 @@ public class mineChunk extends Thread {
     Player player;
     Quarry quarry;
     Thread thread;
-
+    savedChestItems savedItems=new savedChestItems();
 
     public void setRunning(boolean running) {
         isRunning = running;

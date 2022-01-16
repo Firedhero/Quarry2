@@ -21,7 +21,7 @@ public final class Quarry extends JavaPlugin {
     Thread mine;
     quarryMap map=new quarryMap();
     customMap custMap=new customMap();
-    savedChestItems savedItems=new savedChestItems();
+//    savedChestItems savedItems=new savedChestItems();
 
     @Override
     public void onEnable() {
@@ -263,7 +263,7 @@ public final class Quarry extends JavaPlugin {
 
     }
     void saveMinedItems(Block bloc) throws IOException {
-        savedItems.saveItems((int)this.miner.getId(),bloc);
+        this.miner.savedItems.saveItems((int)this.miner.quarry.map.map.get(this.miner.quarryLocation).getintId(),bloc);
     }
 
     public void changeBlock(int x, int y, int z) {

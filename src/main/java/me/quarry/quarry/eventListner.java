@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -123,7 +124,15 @@ public class eventListner implements Listener {
             user.sendMessage("Quarry broken");
         }
     }
+    @EventHandler
+    public void removedItem(InventoryMoveItemEvent event){
 
+        if(quarryThis.map.chestLocations.get(event.getSource().getLocation())!=null){
+            event.setCancelled(true);
+
+        }
+
+    }
     @EventHandler
     public void qClick(PlayerInteractEvent event){
         user=event.getPlayer();
