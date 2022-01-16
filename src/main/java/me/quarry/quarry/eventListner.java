@@ -95,6 +95,7 @@ public class eventListner implements Listener {
             quarry.setChunk(breakChunk);
             //relative to chunk
             quarry.setPos(0,(int)quarryLocation.getY()-1,0);
+            //TODO fix id assignment to quarries
             if(quarryThis.map==null){
                 id=0;
                 quarry.setId(id);
