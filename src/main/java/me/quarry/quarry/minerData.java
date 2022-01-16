@@ -67,6 +67,7 @@ public class minerData implements Serializable {
     Location chestLocation;
     Location quarryLocation;
     Chunk chunk;
+    savedChestItems savedItems=new savedChestItems();
 
     public Player getPlayer() {
         return player;
