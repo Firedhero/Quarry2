@@ -39,6 +39,10 @@ public class mineChunk extends Thread {
     }
 
     private boolean isRunning;
+    private mineChunk mine=this;
+    public mineChunk getContext(){
+        return mine;
+    }
     public void run() {
         isRunning=true;
 

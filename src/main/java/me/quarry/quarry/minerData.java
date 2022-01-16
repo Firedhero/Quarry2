@@ -43,7 +43,7 @@ public class minerData implements Serializable {
     }
 
 
-    public int getId() {
+    public int getintId() {
         return Id;
     }
 
@@ -67,6 +67,7 @@ public class minerData implements Serializable {
     Location chestLocation;
     Location quarryLocation;
     Chunk chunk;
+    savedChestItems savedItems=new savedChestItems();
 
     public Player getPlayer() {
         return player;
@@ -81,5 +82,9 @@ public class minerData implements Serializable {
     public void setChestLocation(Location chestLocation) {
 
        this.chestLocation=chestLocation;
+    }
+    public Location getChestLocation() {
+
+        return this.chestLocation;
     }
 }

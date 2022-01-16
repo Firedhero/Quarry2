@@ -1,6 +1,7 @@
 me\quarry\quarry\mineCustom.class
 me\quarry\quarry\quarryMap.class
 me\quarry\quarry\Items.class
+me\quarry\quarry\customTextures.class
 me\quarry\quarry\funStuff.class
 me\quarry\quarry\Quarry.class
 me\quarry\quarry\eventListner$1.class
