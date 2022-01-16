@@ -101,11 +101,11 @@ public class eventListner implements Listener {
 
                 quarry.setId(id);
             }else{
-                int numberQuarries=0;
-                for(int i=0;i<quarryThis.map.map.size();i++) {
-                    numberQuarries = i;
-                }
-                quarry.setId(numberQuarries);
+//                int numberQuarries=0;
+//                for(int i=0;i<quarryThis.map.map.size();i++) {
+//                    numberQuarries = i;
+//                }
+                quarry.setId(quarryThis.map.map.size());
             }
             quarry.setPlayer(user);
             quarryThis.map.map.put(quarryLocation,quarry);
