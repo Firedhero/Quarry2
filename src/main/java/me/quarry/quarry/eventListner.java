@@ -98,13 +98,14 @@ public class eventListner implements Listener {
             quarry.setPlayer(user);
             //TODO fix id assignment to quarries
             if(quarryThis.map.map.isEmpty()){
-                id=0;
+
                 quarry.setId(id);
             }else{
+                int numberQuarries=0;
                 for(int i=0;i<quarryThis.map.map.size();i++) {
-                    id = i;
+                    numberQuarries = i;
                 }
-                quarry.setId(id);
+                quarry.setId(numberQuarries);
             }
             quarry.setPlayer(user);
             quarryThis.map.map.put(quarryLocation,quarry);
