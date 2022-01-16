@@ -29,14 +29,14 @@ public  class  savedChestItems {
 //            when chest has items withdrawn saving to file stops otherwise continues
 //              make joint file with a array of materials and the file is updated as the list is updated
 
-    public synchronized void saveItems(int chestQuarryId, Block minedBlock) throws IOException {
-        this.chestFile= new File("plugins/chestItems/inventoryForQuarry_" + chestQuarryId + ".txt");
+    public void saveItems(int chestQuarryId, Block minedBlock) throws IOException {
+        chestFile= new File("plugins/chestItems/inventoryForQuarry_" + chestQuarryId + ".txt");
 //        if (chestFile.exists()){
 //            this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt",true);
 //        }else{
-            this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
+            writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
 //        }
-        this.bWriter=new BufferedWriter(writer);
+        bWriter=new BufferedWriter(writer);
         if(!checkUnwanted(minedBlock)) {
 //            this.bWriter.write(minedBlock.getType() + ":");
             if(itemMap.get(minedBlock.getType())!=null){
@@ -45,13 +45,14 @@ public  class  savedChestItems {
             }else{
                 itemMap.put(changeType(minedBlock.getType()),1);
             }
-            for (Material material: itemMap.keySet()){
-                this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
-            }
+
 //            this.bWriter.write(minedBlock.getType() + ","+itemMap.get(minedBlock.getType())+":");
         }
-        this.bWriter.close();
-        this.writer.close();
+        for (Material material: itemMap.keySet()){
+            bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
+        }
+        bWriter.close();
+        writer.close();
     }
 
     private Material changeType(Material type) {
@@ -73,8 +74,8 @@ public  class  savedChestItems {
             case WATER:
             case LAVA:
                 return true;
+            default:
+                return false;
         }
-
-        return false;
     }
 }
