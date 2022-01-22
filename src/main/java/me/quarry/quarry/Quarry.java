@@ -104,66 +104,67 @@ public final class Quarry extends JavaPlugin {
                         map.map.get(quarryLocation).chestLocation=null;
                     }else {
 
-                        Chest chest = (Chest) chestLoc.getBlock().getState();
-                        Inventory inventory=chest.getInventory();
-                        //------------------------------------------------
-                        //https://bukkit.org/threads/checking-if-a-chest-is-full.51617/
-//                        Credit to bergerkiller
-                        //-------------------------------------------------
-                        boolean hasEmptySlot = false;
-                        for (ItemStack stack : inventory.getContents()) {
-                            if (stack == null) {
-                                hasEmptySlot = true;
-                                break;
-                            }
-                        }
-                        //method b: if it contains room for any sort of item
-                        int foundcount = 0;
-                        Collection<ItemStack> drops2 = bloc.getDrops();
-                        for (ItemStack drop3 : drops2) {
-                            ItemStack itemToAdd = drop3;
-                            foundcount = itemToAdd.getAmount();
-                            for (ItemStack stack : inventory.getContents()) {
-                                if (stack == null) foundcount -= itemToAdd.getMaxStackSize();
-                                else if(stack.getType() == itemToAdd.getType()) {
-                                    if (stack.getDurability() == itemToAdd.getDurability()) {
-                                        foundcount -= itemToAdd.getMaxStackSize() - stack.getAmount();
-                                    }
-                                }
-                            }
-                        }
-                        boolean canContainitem = foundcount <= 0;
-                        //-----------------------------------------------------------------------
-//                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
-                        if(canContainitem||hasEmptySlot) {
-                            Collection<ItemStack> drops = bloc.getDrops();
-                            for (ItemStack drop : drops) {
-                                chest.getInventory().addItem(drop);
-                            }
-                            //Checks if it is water
-                            detecWater(chunl,x,y,z);
-                            bloc.setType(Material.AIR);
-                        }else {
-                            //TODO add methoad to store items in file to add to chest, as chest empties useing
-//                             a hashmap as items removed from chest check bloc value to see if item stored on file
-                            try {
-                                saveMinedItems(bloc,quarryLocation);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            detecWater(chunl,x,y,z);
-                            bloc.breakNaturally();
-                        }
+//                        Chest chest = (Chest) chestLoc.getBlock().getState();
+//                        Inventory inventory=chest.getInventory();
+//                        //------------------------------------------------
+//                        //https://bukkit.org/threads/checking-if-a-chest-is-full.51617/
+////                        Credit to bergerkiller
+//                        //-------------------------------------------------
+//                        boolean hasEmptySlot = false;
+//                        for (ItemStack stack : inventory.getContents()) {
+//                            if (stack == null) {
+//                                hasEmptySlot = true;
+//                                break;
+//                            }
+//                        }
+//                        //method b: if it contains room for any sort of item
+//                        int foundcount = 0;
+//                        Collection<ItemStack> drops2 = bloc.getDrops();
+//                        for (ItemStack drop3 : drops2) {
+//                            ItemStack itemToAdd = drop3;
+//                            foundcount = itemToAdd.getAmount();
+//                            for (ItemStack stack : inventory.getContents()) {
+//                                if (stack == null) foundcount -= itemToAdd.getMaxStackSize();
+//                                else if(stack.getType() == itemToAdd.getType()) {
+//                                    if (stack.getDurability() == itemToAdd.getDurability()) {
+//                                        foundcount -= itemToAdd.getMaxStackSize() - stack.getAmount();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        boolean canContainitem = foundcount <= 0;
+//                        //-----------------------------------------------------------------------
+////                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
+//                        if(canContainitem||hasEmptySlot) {
+//                            Collection<ItemStack> drops = bloc.getDrops();
+//                            for (ItemStack drop : drops) {
+//                                chest.getInventory().addItem(drop);
+//                            }
+//                            //Checks if it is water
+//                            detecWater(chunl,x,y,z);
+//                            bloc.setType(Material.AIR);
+//                        }else {
+//                            //TODO add methoad to store items in file to add to chest, as chest empties useing
+////                             a hashmap as items removed from chest check bloc value to see if item stored on file
+//                            try {
+//                                saveMinedItems(bloc,quarryLocation);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            detecWater(chunl,x,y,z);
+//                            bloc.breakNaturally();
+//                        }
                     }
 
+                }else {
+                    try {
+                        saveMinedItems(bloc, quarryLocation);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    detecWater(chunl, x, y, z);
+                    bloc.breakNaturally();
                 }
-                try {
-                    saveMinedItems(bloc,quarryLocation);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                detecWater(chunl,x,y,z);
-                bloc.breakNaturally();
             }
 
 
@@ -242,7 +243,7 @@ public final class Quarry extends JavaPlugin {
         }
 
     }
-
+    //Also checks for seaweed/kelp ect
     private void checkWaterLogged(Chunk chunk,int x,int y,int z) {
         boolean waterLogged=false;
         World world=chunk.getWorld();
@@ -254,6 +255,18 @@ public final class Quarry extends JavaPlugin {
             world.getBlockAt(x,y,z).breakNaturally();
             world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
         }
+        Material block=world.getBlockAt(x,y,z).getType();
+        switch (block){
+            case KELP:
+            case SEAGRASS:
+            case SEA_PICKLE:
+                world.getBlockAt(x,y,z).breakNaturally();
+                world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
+            default:
+                ;
+
+        }
+
     }
 
     @Override

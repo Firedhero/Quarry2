@@ -132,6 +132,7 @@ public class eventListner implements Listener {
 
         if(quarryThis.map.chestLocations.get(event.getSource().getLocation())!=null){
             event.setCancelled(true);
+            quarryThis.map.chestLocations.get(event.getSource().getLocation()).depositer.attemptDeposit(event.getItem().getType());
 
         }
 

@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public  class  savedChestItems {
     File chestFile;
@@ -57,8 +59,13 @@ public  class  savedChestItems {
             this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
         }
     }
-    private synchronized void removeFromItemHashMap(Block removedBlock){
-        itemMap.remove(removedBlock);
+    public synchronized int decrementFromItemHashMap(Block removedBlock){
+        int count=itemMap.get(removedBlock.getType());
+        if (count==0){
+            return 0;
+        }
+        itemMap.put(removedBlock.getType(),count-1);
+        return count;
     }
 
     private Material changeType(Material type) {
