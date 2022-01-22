@@ -53,8 +53,8 @@ public  class  savedChestItems {
             this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
         }
     }
-    private synchronized void removeFromItemHashMap(){
-
+    private synchronized void removeFromItemHashMap(Block removedBlock){
+        itemMap.remove(removedBlock);
     }
 
     private Material changeType(Material type) {
