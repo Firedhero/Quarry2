@@ -16,6 +16,7 @@ public  class  savedChestItems {
     private HashMap<Material, Integer> itemMap=new HashMap<Material,Integer>();
     Boolean writingFile;
     Boolean readingFile;
+    Quarry context;
 
 
     public savedChestItems(){
@@ -25,7 +26,10 @@ public  class  savedChestItems {
 
     }
 
-//      TODO add synchornized Threads for saving to file and taking from file
+    public void setContext(Quarry context) {
+        this.context = context;
+    }
+    //      TODO add synchornized Threads for saving to file and taking from file
 //            when chest has items withdrawn saving to file stops otherwise continues
 //              make joint file with a array of materials and the file is updated as the list is updated
 
