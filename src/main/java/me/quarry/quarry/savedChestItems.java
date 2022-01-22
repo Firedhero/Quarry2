@@ -13,7 +13,7 @@ public  class  savedChestItems {
     File chestFile;
     FileWriter writer;
     BufferedWriter bWriter;
-    HashMap<Material, Integer> itemMap=new HashMap<Material,Integer>();
+    private HashMap<Material, Integer> itemMap=new HashMap<Material,Integer>();
     Boolean writingFile;
     Boolean readingFile;
 
@@ -29,30 +29,32 @@ public  class  savedChestItems {
 //            when chest has items withdrawn saving to file stops otherwise continues
 //              make joint file with a array of materials and the file is updated as the list is updated
 
-    public void saveItems(int chestQuarryId, Block minedBlock) throws IOException {
+    public void saveItemsToFile(int chestQuarryId, Block minedBlock) throws IOException {
         chestFile= new File("plugins/chestItems/inventoryForQuarry_" + chestQuarryId + ".txt");
-//        if (chestFile.exists()){
-//            this.writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt",true);
-//        }else{
-            writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
-//        }
+        writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
         bWriter=new BufferedWriter(writer);
         if(!checkUnwanted(minedBlock)) {
-//            this.bWriter.write(minedBlock.getType() + ":");
-            if(itemMap.get(minedBlock.getType())!=null){
-                int newCount=itemMap.get(minedBlock.getType())+1;
-                itemMap.put(minedBlock.getType(), newCount);
-            }else{
-                itemMap.put(changeType(minedBlock.getType()),1);
-            }
-
-//            this.bWriter.write(minedBlock.getType() + ","+itemMap.get(minedBlock.getType())+":");
+            addToItemHashMap(minedBlock);
         }
-        for (Material material: itemMap.keySet()){
-            bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
-        }
+        writeToFileFromItemHashMap(bWriter);
         bWriter.close();
         writer.close();
+    }
+    private synchronized void addToItemHashMap(Block minedBlock){
+        if(itemMap.get(minedBlock.getType())!=null){
+            int newCount=itemMap.get(minedBlock.getType())+1;
+            itemMap.put(minedBlock.getType(), newCount);
+        }else{
+            itemMap.put(changeType(minedBlock.getType()),1);
+        }
+    }
+    private synchronized void writeToFileFromItemHashMap(BufferedWriter bWriter) throws IOException {
+        for (Material material: itemMap.keySet()){
+            this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
+        }
+    }
+    private synchronized void removeFromItemHashMap(){
+
     }
 
     private Material changeType(Material type) {

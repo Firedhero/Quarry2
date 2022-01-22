@@ -264,7 +264,7 @@ public final class Quarry extends JavaPlugin {
     }
     void saveMinedItems(Block bloc,Location quarryLocation) throws IOException {
         //trying to grab the miner thats running to update its list
-        quarryThis.map.map.get(quarryLocation).savedItems.saveItems(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
+        quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
     }
 
     public void changeBlock(int x, int y, int z) {
