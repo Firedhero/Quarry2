@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +48,9 @@ public class eventListner implements Listener {
         }
         if(quarryThis.map.map.containsKey(event.getBlock().getLocation())){
             quarryThis.map.map.entrySet();
+        }
+        if(quarryThis.map.chestLocations.containsKey(event.getBlock().getLocation())){
+            quarryThis.map.chestLocations.get(event.getBlock().getLocation()).setChestLocation(null);
         }
 
         if(itemName.equals(ChatColor.RED+"Big Dig")){
@@ -96,6 +100,7 @@ public class eventListner implements Listener {
             //relative to chunk
             quarry.setPos(0,(int)quarryLocation.getY()-1,0);
             quarry.setPlayer(user);
+            quarry.setContext(quarryThis);
             if(quarryThis.map.map.isEmpty()){
 
                 quarry.setId(id);
@@ -127,15 +132,7 @@ public class eventListner implements Listener {
             user.sendMessage("Quarry broken");
         }
     }
-    @EventHandler
-    public void removedItem(InventoryMoveItemEvent event){
 
-        if(quarryThis.map.chestLocations.get(event.getSource().getLocation())!=null){
-            event.setCancelled(true);
-
-        }
-
-    }
     @EventHandler
     public void qClick(PlayerInteractEvent event){
         user=event.getPlayer();
@@ -204,8 +201,15 @@ public class eventListner implements Listener {
         if(itemName.equals(ChatColor.RED+"Marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& quarryThis.map.map.containsKey(event.getClickedBlock().getLocation())){
             user.sendMessage("you have marked quarry for chest at "+ markedChest);
             Location markedQuarry=event.getClickedBlock().getLocation();
-            quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation=markedChest;
+            quarryThis.map.map.get(event.getClickedBlock().getLocation()).setChestLocation(markedChest);
+            if(quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation!=null){
+                synchronized (quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer){
+                    quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer.notify();
+                }
+
+            }
         }
+
 
 
         if(itemName.equals(ChatColor.RED+"custom marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&&!event.getClickedBlock().getType().equals(Material.FURNACE)){

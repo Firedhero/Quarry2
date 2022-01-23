@@ -59,6 +59,7 @@ public final class Quarry extends JavaPlugin {
         for(Map.Entry mapElement:quarryThis.map.map.entrySet()){
             Location loc=(Location)mapElement.getKey();
                 minerData miner=quarryThis.map.map.get(loc);
+                miner.setContext(quarryThis);
                 if(miner.isRunning){
                     quarryThis.runMiner(miner.quarryLocation,miner.chunk,miner.Id);
 //
@@ -97,79 +98,28 @@ public final class Quarry extends JavaPlugin {
             public void run() {
                 Block bloc=chunl.getBlock(x,y,z);
 
-                if(map.map.get(quarryLocation).chestLocation!=null){
-                    Location chestLoc=map.map.get(quarryLocation).chestLocation;
-                    if(chestLoc.getBlock().getType()!=Material.CHEST){
-                        map.map.get(quarryLocation).chestLocation=null;
-                    }else {
 
-                        Chest chest = (Chest) chestLoc.getBlock().getState();
-                        Inventory inventory=chest.getInventory();
-                        //------------------------------------------------
-                        //https://bukkit.org/threads/checking-if-a-chest-is-full.51617/
-//                        Credit to bergerkiller
-                        //-------------------------------------------------
-                        boolean hasEmptySlot = false;
-                        for (ItemStack stack : inventory.getContents()) {
-                            if (stack == null) {
-                                hasEmptySlot = true;
-                                break;
-                            }
-                        }
-                        //method b: if it contains room for any sort of item
-                        int foundcount = 0;
-                        Collection<ItemStack> drops2 = bloc.getDrops();
-                        for (ItemStack drop3 : drops2) {
-                            ItemStack itemToAdd = drop3;
-                            foundcount = itemToAdd.getAmount();
-                            for (ItemStack stack : inventory.getContents()) {
-                                if (stack == null) foundcount -= itemToAdd.getMaxStackSize();
-                                else if(stack.getType() == itemToAdd.getType()) {
-                                    if (stack.getDurability() == itemToAdd.getDurability()) {
-                                        foundcount -= itemToAdd.getMaxStackSize() - stack.getAmount();
-                                    }
-                                }
-                            }
-                        }
-                        boolean canContainitem = foundcount <= 0;
-                        //-----------------------------------------------------------------------
-//                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
-                        if(canContainitem||hasEmptySlot) {
-                            Collection<ItemStack> drops = bloc.getDrops();
-                            for (ItemStack drop : drops) {
-                                chest.getInventory().addItem(drop);
-                            }
-                            //Checks if it is water
-                            detecWater(chunl,x,y,z);
-                            bloc.setType(Material.AIR);
-                        }else {
-                            //TODO add methoad to store items in file to add to chest, as chest empties useing
-//                             a hashmap as items removed from chest check bloc value to see if item stored on file
-                            try {
-                                saveMinedItems(bloc,quarryLocation);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            detecWater(chunl,x,y,z);
-                            bloc.breakNaturally();
+                try {
+                    saveMinedItems(bloc, quarryLocation);
+                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null) {
+                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
+                            quarryThis.map.map.get(quarryLocation).depositer.notify();
                         }
                     }
-
-                }
-                try {
-                    saveMinedItems(bloc,quarryLocation);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                detecWater(chunl,x,y,z);
-                bloc.breakNaturally();
+
+                detecWater(chunl, x, y, z);
+//                bloc.breakNaturally();
+
             }
 
 
         };runner.runTask(this);
 
     }
-
+//    TODO make the border before any mining happens to prevent unmined water
     private void detecWater(Chunk chunk,int x, int y, int z) {
         Block block;
         World world=chunk.getWorld();
@@ -241,7 +191,7 @@ public final class Quarry extends JavaPlugin {
         }
 
     }
-
+    //Also checks for seaweed/kelp ect
     private void checkWaterLogged(Chunk chunk,int x,int y,int z) {
         boolean waterLogged=false;
         World world=chunk.getWorld();
@@ -253,6 +203,18 @@ public final class Quarry extends JavaPlugin {
             world.getBlockAt(x,y,z).breakNaturally();
             world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
         }
+        Material block=world.getBlockAt(x,y,z).getType();
+        switch (block){
+            case KELP:
+            case SEAGRASS:
+            case SEA_PICKLE:
+                world.getBlockAt(x,y,z).breakNaturally();
+                world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
+            default:
+                ;
+
+        }
+
     }
 
     @Override
@@ -264,7 +226,7 @@ public final class Quarry extends JavaPlugin {
     }
     void saveMinedItems(Block bloc,Location quarryLocation) throws IOException {
         //trying to grab the miner thats running to update its list
-        quarryThis.map.map.get(quarryLocation).savedItems.saveItems(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
+        quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
     }
 
     public void changeBlock(int x, int y, int z) {

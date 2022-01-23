@@ -67,7 +67,18 @@ public class minerData implements Serializable {
     Location chestLocation;
     Location quarryLocation;
     Chunk chunk;
+    Quarry context;
     savedChestItems savedItems=new savedChestItems();
+    final chestDepositer depositer=new chestDepositer(this);
+//    final Thread depo=new Thread(depositer);
+    minerData(){
+        savedItems.setContext(this);
+//        depo.start();
+//        depositer.setThread(depo);
+    }
+    public void noDepo(){
+//        depo.notify();
+    }
 
     public Player getPlayer() {
         return player;
@@ -86,5 +97,12 @@ public class minerData implements Serializable {
     public Location getChestLocation() {
 
         return this.chestLocation;
+    }
+
+    public void setContext(Quarry quarry) {
+        context=quarry;
+    }
+    public Quarry getContext(){
+        return context;
     }
 }

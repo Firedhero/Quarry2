@@ -83,7 +83,7 @@ public class quarryMap {
 
 //    Location LinkedChest;
     HashMap<Location,minerData> map=new HashMap<Location, minerData>();
-    HashMap<Location,Location> chestLocations=new HashMap<Location, Location>();
+    HashMap<Location, minerData> chestLocations=new HashMap<Location, minerData>();
 
     public Location getQuarryLocation() {
         return quarryLocation;
@@ -167,7 +167,7 @@ public class quarryMap {
                     String[] chestz = chestxyz[3].split("=");
                     Location chest = Bukkit.getServer().getWorld("world").getBlockAt((int) Double.parseDouble(chestx[1].trim()), (int) Double.parseDouble(chesty[1].trim()), (int) Double.parseDouble(chestz[1].trim())).getLocation();
                     miner.setChestLocation(chest);
-                    chestLocations.put(chest,chest);
+                    chestLocations.put(chest,miner);
                 }
                 char a=' ';
                 miner.setRunning(Boolean.parseBoolean(partsminer[5]));
