@@ -97,6 +97,7 @@ public class eventListner implements Listener {
             //relative to chunk
             quarry.setPos(0,(int)quarryLocation.getY()-1,0);
             quarry.setPlayer(user);
+            quarry.setContext(quarryThis);
             if(quarryThis.map.map.isEmpty()){
 
                 quarry.setId(id);

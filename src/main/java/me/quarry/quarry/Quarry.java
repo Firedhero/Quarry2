@@ -59,7 +59,7 @@ public final class Quarry extends JavaPlugin {
         for(Map.Entry mapElement:quarryThis.map.map.entrySet()){
             Location loc=(Location)mapElement.getKey();
                 minerData miner=quarryThis.map.map.get(loc);
-                miner.setContext(this);
+                miner.setContext(quarryThis);
                 if(miner.isRunning){
                     quarryThis.runMiner(miner.quarryLocation,miner.chunk,miner.Id);
 //
