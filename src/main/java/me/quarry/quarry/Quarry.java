@@ -90,9 +90,6 @@ public final class Quarry extends JavaPlugin {
     //connects to main thread to updates blocks
     public void changeBlock(Chunk chunl,int x,int y,int z,Location quarryLocation){
 
-//        TODO add liquid detection so it changes the blocks immediatly to the right of mined block and addes (stone/sponge)
-//         to prevent liquids from causing lag
-
         BukkitRunnable runner=new BukkitRunnable() {
             @Override
             public void run() {
@@ -138,56 +135,56 @@ public final class Quarry extends JavaPlugin {
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX-1,y,worldZ-1);
         }
         if (x==0){
             block=world.getBlockAt(worldX-1,y, worldZ);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX-1,y,worldZ);
         }
         if (x==15){
             block=world.getBlockAt(worldX+1,y,worldZ);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX+1,y,worldZ);
         }
         if (x==15&&z==0){
             block=world.getBlockAt(worldX+1,y,worldZ-1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX+1,y,worldZ-1);
         }
         if (z==0){
             block=world.getBlockAt(worldX,y,worldZ-1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX,y,worldZ-1);
         }
         if (z==15){
             block=world.getBlockAt(worldX,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX,y,worldZ+1);
         }
         if (z==15&&x==0){
             block=world.getBlockAt(worldX-1,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX-1,y,worldZ+1);
         }
         if(x==15&&z==15){
             block=world.getBlockAt(worldX+1,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX+1,y,worldZ+1);
         }
 
     }
