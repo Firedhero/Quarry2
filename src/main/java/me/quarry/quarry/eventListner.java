@@ -198,7 +198,7 @@ public class eventListner implements Listener {
         if(itemName.equals(ChatColor.RED+"Marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& quarryThis.map.map.containsKey(event.getClickedBlock().getLocation())){
             user.sendMessage("you have marked quarry for chest at "+ markedChest);
             Location markedQuarry=event.getClickedBlock().getLocation();
-            quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation=markedChest;
+            quarryThis.map.map.get(event.getClickedBlock().getLocation()).setChestLocation(markedChest);
             if(quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation!=null){
                 synchronized (quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer){
                     quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer.notify();

@@ -101,9 +101,13 @@ public final class Quarry extends JavaPlugin {
 
                 try {
                     saveMinedItems(bloc, quarryLocation);
+//                    synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
+//                        quarryThis.map.map.get(quarryLocation).depositer.deposit();
+//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 detecWater(chunl, x, y, z);
                 bloc.breakNaturally();
 

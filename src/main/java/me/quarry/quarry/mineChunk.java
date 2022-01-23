@@ -63,7 +63,7 @@ public class mineChunk extends Thread {
                             while (!quarry.map.map.get(quarryLocation).isRunning) {
                                 try {
 
-                                    sleep(500);
+                                    wait(500);
                                 } catch (InterruptedException e) {
     //                            e.printStackTrace();
                                 }

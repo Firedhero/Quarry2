@@ -58,8 +58,7 @@ public  class  savedChestItems {
             addToItemHashMap(minedBlock);
         }
         writeToFileFromItemHashMap(bWriter);
-        bWriter.close();
-        writer.close();
+
     }
     private synchronized void addToItemHashMap(Block minedBlock){
         if(itemMap.get(changeType(minedBlock.getType()))!=null){
@@ -79,11 +78,10 @@ public  class  savedChestItems {
         Iterator<Material> iter=itemMap.keySet().iterator();
         int count=0;
         Material material = null;
-        for (int i=0;i<itemMap.size();i++){
-            if (iter.hasNext()){
+            while (iter.hasNext()){
                 material= iter.next();
-                count=itemMap.get(iter.next());
-            }
+                count=itemMap.get(material);
+
             if (count>=1) {
                 itemMap.put(material,count-1);
                 writeToFileFromItemHashMap(bWriter);

@@ -70,10 +70,10 @@ public class minerData implements Serializable {
     Quarry context;
     savedChestItems savedItems=new savedChestItems();
     final chestDepositer depositer=new chestDepositer(this);
-    Thread depo=new Thread(depositer);
+//    Thread depo=new Thread(depositer);
     minerData(){
         savedItems.setContext(this);
-        depositer.setThread(depo);
+//        depositer.setThread(depo);
     }
 
     public Player getPlayer() {
