@@ -11,13 +11,17 @@ import java.util.Collection;
 public class chestDepositer implements Runnable {
     Location chestLocation;
     minerData context;
+    Thread thread;
     chestDepositer(minerData context){
         this.context=context;
-        chestLocation=context.chestLocation;
+        this.chestLocation=context.chestLocation;
         if(chestLocation!=null){
-            Thread thread=new Thread();
-            thread.start();
+            this.thread=new Thread();
+            this.thread.start();
         }
+    }
+    public synchronized void notifyThread(){
+        thread.notify();
     }
 
     public void setChestLocation(Location chestLocation) {
@@ -33,7 +37,7 @@ public class chestDepositer implements Runnable {
             e.printStackTrace();
         }
     }
-    void deposit() throws InterruptedException {
+     synchronized void deposit() throws InterruptedException {
         Material blockType=context.savedItems.takeFromItemHashMap();
         if(blockType!=null) {
             if (checkChestSpace(blockType)) {
@@ -92,19 +96,19 @@ public class chestDepositer implements Runnable {
         return false;
     }
 
-    public void attemptDeposit(Material savedBlock){
-
-        int count=context.savedItems.decrementFromItemHashMap(savedBlock);
-
-        Chest chest = (Chest) chestLocation.getBlock().getState();
-        ItemStack itemStack=new ItemStack(savedBlock,count);
-//                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
-        if(checkChestSpace(savedBlock)) {
-            Collection<ItemStack> drops = (Collection<ItemStack>) itemStack;
-            for (ItemStack drop : drops) {
-                chest.getInventory().addItem(drop);
-            }
-        }
-
-    }
+//    public void attemptDeposit(Material savedBlock){
+//
+////        int count=context.savedItems.decrementFromItemHashMap(savedBlock);
+//
+//        Chest chest = (Chest) chestLocation.getBlock().getState();
+////        ItemStack itemStack=new ItemStack(savedBlock,count);
+////                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
+//        if(checkChestSpace(savedBlock)) {
+//            Collection<ItemStack> drops = (Collection<ItemStack>) itemStack;
+//            for (ItemStack drop : drops) {
+//                chest.getInventory().addItem(drop);
+//            }
+//        }
+//
+//    }
 }

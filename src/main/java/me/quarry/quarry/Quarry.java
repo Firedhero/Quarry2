@@ -98,34 +98,15 @@ public final class Quarry extends JavaPlugin {
             public void run() {
                 Block bloc=chunl.getBlock(x,y,z);
 
-                if(map.map.get(quarryLocation).chestLocation!=null){
-                    Location chestLoc=map.map.get(quarryLocation).chestLocation;
-                    if(chestLoc.getBlock().getType()!=Material.CHEST){
-                        map.map.get(quarryLocation).chestLocation=null;
-                    }else {
 
-
-                            //TODO add methoad to store items in file to add to chest, as chest empties useing
-//                             a hashmap as items removed from chest check bloc value to see if item stored on file
-                            try {
-                                saveMinedItems(bloc,quarryLocation);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            detecWater(chunl,x,y,z);
-                            bloc.breakNaturally();
-
-                    }
-
-                }else {
-                    try {
-                        saveMinedItems(bloc, quarryLocation);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    detecWater(chunl, x, y, z);
-                    bloc.breakNaturally();
+                try {
+                    saveMinedItems(bloc, quarryLocation);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                detecWater(chunl, x, y, z);
+                bloc.breakNaturally();
+
             }
 
 

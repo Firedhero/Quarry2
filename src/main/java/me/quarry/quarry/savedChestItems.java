@@ -71,14 +71,7 @@ public  class  savedChestItems {
             this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
         }
     }
-    public synchronized int decrementFromItemHashMap(Material removedBlock){
-        int count=itemMap.get(removedBlock);
-        if (count==0){
-            return 0;
-        }
-        itemMap.put(removedBlock,count-1);
-        return 1;
-    }
+
     public synchronized Material takeFromItemHashMap(){
         Iterator<Material> iter=itemMap.keySet().iterator();
         int count=0;

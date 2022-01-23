@@ -199,7 +199,7 @@ public class eventListner implements Listener {
             Location markedQuarry=event.getClickedBlock().getLocation();
             quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation=markedChest;
             if(quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation!=null){
-                quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer.notify();
+                quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer.notifyThread();
             }
         }
 
