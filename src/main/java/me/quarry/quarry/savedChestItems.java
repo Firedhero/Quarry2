@@ -1,6 +1,7 @@
 package me.quarry.quarry;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -18,14 +19,16 @@ public  class  savedChestItems {
     public void populateHashMap() {
         try {
 
-            File file=new File("plugins/chestItems/inventoryForQuarry_" + context.Id);
+            File file=new File("plugins/chestItems/inventoryForQuarry_" + context.getintId()+".txt");
             if (file.exists()) {
                 BufferedReader bf = new BufferedReader(new FileReader(file));
                 String itemsLine = bf.readLine();
                 String[] items = itemsLine.split(":");
                 for (int i = 0; i < items.length; i++) {
-                    itemMap.put(Material.getMaterial(items[i].split(",")[0]), Integer.parseInt(items[i].split(",")[1]));
+                    String[]parts=items[i].split(",");
+                    itemMap.put(Material.getMaterial(String.valueOf(parts[0])), Integer.parseInt(parts[1]));
                 }
+
             }
         }catch (Exception e){
 
@@ -37,7 +40,7 @@ public  class  savedChestItems {
         File file= new File("plugins/chestItems");
         if (!file.exists())
             new File("plugins/chestItems").mkdirs();
-
+        populateHashMap();
     }
 
     public void setContext(minerData context) {
@@ -59,9 +62,9 @@ public  class  savedChestItems {
         writer.close();
     }
     private synchronized void addToItemHashMap(Block minedBlock){
-        if(itemMap.get(minedBlock.getType())!=null){
-            int newCount=itemMap.get(minedBlock.getType())+1;
-            itemMap.put(minedBlock.getType(), newCount);
+        if(itemMap.get(changeType(minedBlock.getType()))!=null){
+            int newCount=itemMap.get(changeType(minedBlock.getType()))+1;
+            itemMap.put(changeType(minedBlock.getType()), newCount);
         }else{
             itemMap.put(changeType(minedBlock.getType()),1);
         }
@@ -72,7 +75,7 @@ public  class  savedChestItems {
         }
     }
 
-    public synchronized Material takeFromItemHashMap(){
+    public synchronized Material takeFromItemHashMap() throws IOException {
         Iterator<Material> iter=itemMap.keySet().iterator();
         int count=0;
         Material material = null;
@@ -83,6 +86,7 @@ public  class  savedChestItems {
             }
             if (count>=1) {
                 itemMap.put(material,count-1);
+                writeToFileFromItemHashMap(bWriter);
                 return material;
             }
         }

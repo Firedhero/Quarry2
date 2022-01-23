@@ -1,11 +1,14 @@
 package me.quarry.quarry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public class chestDepositer implements Runnable {
@@ -15,13 +18,10 @@ public class chestDepositer implements Runnable {
     chestDepositer(minerData context){
         this.context=context;
         this.chestLocation=context.chestLocation;
-        if(chestLocation!=null){
-            this.thread=new Thread();
-            this.thread.start();
-        }
-    }
-    public synchronized void notifyThread(){
-        thread.notify();
+//        if(chestLocation!=null){
+//            this.thread=new Thread();
+//            this.thread.start();
+//        }
     }
 
     public void setChestLocation(Location chestLocation) {
@@ -33,27 +33,33 @@ public class chestDepositer implements Runnable {
 //        TODO add loop, add notify method that alerts thread when items removed from chest otherwise it permanently sleeps saving resources
         try {
             deposit();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
-     synchronized void deposit() throws InterruptedException {
+     synchronized void deposit() throws InterruptedException, IOException {
         Material blockType=context.savedItems.takeFromItemHashMap();
-        if(blockType!=null) {
+        if(blockType!=null&&chestLocation!=null) {
             if (checkChestSpace(blockType)) {
-                Chest chest = (Chest) chestLocation.getBlock().getState();
-                ItemStack itemStack = new ItemStack(blockType, 1);
-//                        NOTE force custom texturepack on items to change them (CUSTOM BLOCKS)
-                Collection<ItemStack> drops = (Collection<ItemStack>) itemStack;
-                for (ItemStack drop : drops) {
-                    chest.getInventory().addItem(drop);
-                }
-
+                updateChestInventory(blockType);
             }
         }else {
             wait();
             deposit();
         }
+    }
+
+    private void updateChestInventory(Material blockType) {
+        BukkitRunnable runner2=new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                Chest chest = (Chest) chestLocation.getBlock().getState();
+                ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(blockType)), 1);
+                chest.getInventory().addItem(itemStack);
+                Bukkit.broadcastMessage("ADDING "+blockType+" to chest at "+chestLocation);
+            }
+        };runner2.runTask(context.context);
     }
 
     private boolean checkChestSpace(Material savedBlock) {
@@ -94,6 +100,11 @@ public class chestDepositer implements Runnable {
             return true;
         }
         return false;
+    }
+
+    public void setThread(Thread depo) {
+        thread=depo;
+        thread.start();
     }
 
 //    public void attemptDeposit(Material savedBlock){
