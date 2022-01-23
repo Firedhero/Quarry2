@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -127,16 +128,7 @@ public class eventListner implements Listener {
             user.sendMessage("Quarry broken");
         }
     }
-    @EventHandler
-    public void removedItem(InventoryMoveItemEvent event){
 
-        if(quarryThis.map.chestLocations.get(event.getSource().getLocation())!=null){
-            event.setCancelled(true);
-            quarryThis.map.chestLocations.get(event.getSource().getLocation()).depositer.attemptDeposit(event.getItem().getType());
-
-        }
-
-    }
     @EventHandler
     public void qClick(PlayerInteractEvent event){
         user=event.getPlayer();
@@ -206,7 +198,11 @@ public class eventListner implements Listener {
             user.sendMessage("you have marked quarry for chest at "+ markedChest);
             Location markedQuarry=event.getClickedBlock().getLocation();
             quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation=markedChest;
+            if(quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation!=null){
+                quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer.notify();
+            }
         }
+
 
 
         if(itemName.equals(ChatColor.RED+"custom marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&&!event.getClickedBlock().getType().equals(Material.FURNACE)){

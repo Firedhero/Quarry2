@@ -3,23 +3,35 @@ package me.quarry.quarry;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Iterator;
 
 public  class  savedChestItems {
     File chestFile;
     FileWriter writer;
     BufferedWriter bWriter;
     private HashMap<Material, Integer> itemMap=new HashMap<Material,Integer>();
-    Boolean writingFile;
-    Boolean readingFile;
-    Quarry context;
+    minerData context;
 
+    public void populateHashMap() {
+        try {
+
+            File file=new File("plugins/chestItems/inventoryForQuarry_" + context.Id);
+            if (file.exists()) {
+                BufferedReader bf = new BufferedReader(new FileReader(file));
+                String itemsLine = bf.readLine();
+                String[] items = itemsLine.split(":");
+                for (int i = 0; i < items.length; i++) {
+                    itemMap.put(Material.getMaterial(items[i].split(",")[0]), Integer.parseInt(items[i].split(",")[1]));
+                }
+            }
+        }catch (Exception e){
+
+        }
+
+    }
 
     public savedChestItems(){
         File file= new File("plugins/chestItems");
@@ -28,7 +40,7 @@ public  class  savedChestItems {
 
     }
 
-    public void setContext(Quarry context) {
+    public void setContext(minerData context) {
         this.context = context;
     }
     //      TODO add synchornized Threads for saving to file and taking from file
@@ -59,13 +71,29 @@ public  class  savedChestItems {
             this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
         }
     }
-    public synchronized int decrementFromItemHashMap(Block removedBlock){
-        int count=itemMap.get(removedBlock.getType());
+    public synchronized int decrementFromItemHashMap(Material removedBlock){
+        int count=itemMap.get(removedBlock);
         if (count==0){
             return 0;
         }
-        itemMap.put(removedBlock.getType(),count-1);
-        return count;
+        itemMap.put(removedBlock,count-1);
+        return 1;
+    }
+    public synchronized Material takeFromItemHashMap(){
+        Iterator<Material> iter=itemMap.keySet().iterator();
+        int count=0;
+        Material material = null;
+        for (int i=0;i<itemMap.size();i++){
+            if (iter.hasNext()){
+                material= iter.next();
+                count=itemMap.get(iter.next());
+            }
+            if (count>=1) {
+                itemMap.put(material,count-1);
+                return material;
+            }
+        }
+        return null;
     }
 
     private Material changeType(Material type) {

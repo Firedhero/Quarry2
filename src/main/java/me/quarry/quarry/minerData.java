@@ -70,7 +70,10 @@ public class minerData implements Serializable {
     Quarry context;
     savedChestItems savedItems=new savedChestItems();
     chestDepositer depositer=new chestDepositer(this);
-
+    minerData(){
+        savedItems.setContext(this);
+        savedItems.populateHashMap();
+    }
 
     public Player getPlayer() {
         return player;
