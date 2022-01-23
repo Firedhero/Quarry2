@@ -49,6 +49,9 @@ public class eventListner implements Listener {
         if(quarryThis.map.map.containsKey(event.getBlock().getLocation())){
             quarryThis.map.map.entrySet();
         }
+        if(quarryThis.map.chestLocations.containsKey(event.getBlock().getLocation())){
+            quarryThis.map.chestLocations.get(event.getBlock().getLocation()).setChestLocation(null);
+        }
 
         if(itemName.equals(ChatColor.RED+"Big Dig")){
             //Block location

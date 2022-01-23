@@ -56,8 +56,9 @@ public  class  savedChestItems {
         bWriter=new BufferedWriter(writer);
         if(!checkUnwanted(minedBlock)) {
             addToItemHashMap(minedBlock);
+            writeToFileFromItemHashMap(bWriter);
         }
-        writeToFileFromItemHashMap(bWriter);
+
 
     }
     private synchronized void addToItemHashMap(Block minedBlock){

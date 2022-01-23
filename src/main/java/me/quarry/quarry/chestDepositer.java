@@ -3,30 +3,21 @@ package me.quarry.quarry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
-import java.util.Collection;
 
 public class chestDepositer implements Runnable {
-    Location chestLocation;
     minerData context;
-    Thread thread;
+    final Thread thread;
     chestDepositer(minerData context){
         this.context=context;
-        this.chestLocation=context.chestLocation;
+        thread = new Thread(this);
+        thread.start();
 
-            this.thread=new Thread();
-            this.thread.start();
-
-    }
-
-    public void setChestLocation(Location chestLocation) {
-        this.chestLocation = chestLocation;
     }
 
     @Override
@@ -39,30 +30,30 @@ public class chestDepositer implements Runnable {
         }
     }
      synchronized void deposit() throws InterruptedException, IOException {
+        while (context.chestLocation==null)
+            wait();
         Material blockType=context.savedItems.takeFromItemHashMap();
-
-        if(blockType!=null&&context.chestLocation!=null) {
-            if (checkChestSpace(blockType)) {
-                updateChestInventory(blockType);
-            }
+        if(blockType!=null) {
+            updateChestInventory(blockType);
         }else {
-            this.thread.wait();
-            deposit();
+            wait();
         }
+         deposit();
     }
 
     private void updateChestInventory(Material blockType) {
         BukkitRunnable runner2=new BukkitRunnable() {
             @Override
             public void run() {
-
-                Chest chest = (Chest) context.chestLocation.getBlock().getState();
-                ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(blockType)), 1);
-                chest.getInventory().addItem(itemStack);
-                Bukkit.broadcastMessage("ADDING "+blockType+" to chest at "+chestLocation);
+                if (checkChestSpace(blockType)) {
+                    Chest chest = (Chest) context.chestLocation.getBlock().getState();
+                    ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(blockType)), 1);
+                    chest.getInventory().addItem(itemStack);
+                }
             }
         };runner2.runTask(context.context);
     }
+
 
     private boolean checkChestSpace(Material savedBlock) {
         int count=1;

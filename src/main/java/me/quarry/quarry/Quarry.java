@@ -101,15 +101,17 @@ public final class Quarry extends JavaPlugin {
 
                 try {
                     saveMinedItems(bloc, quarryLocation);
-//                    synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
-//                        quarryThis.map.map.get(quarryLocation).depositer.deposit();
-//                    }
+                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null) {
+                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
+                            quarryThis.map.map.get(quarryLocation).depositer.notify();
+                        }
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 detecWater(chunl, x, y, z);
-                bloc.breakNaturally();
+//                bloc.breakNaturally();
 
             }
 
@@ -117,7 +119,7 @@ public final class Quarry extends JavaPlugin {
         };runner.runTask(this);
 
     }
-
+//    TODO make the border before any mining happens to prevent unmined water
     private void detecWater(Chunk chunk,int x, int y, int z) {
         Block block;
         World world=chunk.getWorld();
