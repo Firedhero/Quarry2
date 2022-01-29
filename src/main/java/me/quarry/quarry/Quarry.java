@@ -107,7 +107,8 @@ public final class Quarry extends JavaPlugin {
                     e.printStackTrace();
                 }
 
-                detecWater(chunl, x, y, z);
+                detecBorderWater(chunl, x, y, z);
+                bloc.setType(Material.AIR);
 //                bloc.breakNaturally();
 
             }
@@ -117,15 +118,9 @@ public final class Quarry extends JavaPlugin {
 
     }
 //    TODO make the border before any mining happens to prevent unmined water
-    private void detecWater(Chunk chunk,int x, int y, int z) {
+    private void detecBorderWater(Chunk chunk,int x, int y, int z) {
         Block block;
         World world=chunk.getWorld();
-
-        if (chunk.getBlock(x,y,z).isLiquid()){
-            chunk.getBlock(x,y,z).setType(Material.AIR);
-        }
-
-
         //border detection
         Location location=chunk.getBlock(x,y,z).getLocation();
         int worldX= (int) location.getX();
@@ -200,18 +195,26 @@ public final class Quarry extends JavaPlugin {
             world.getBlockAt(x,y,z).breakNaturally();
             world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
         }
+        checkWaterBlocks(chunk,x,y,z);
+
+
+    }
+
+    private void checkWaterBlocks(Chunk chunk, int x, int y, int z) {
+        World world=chunk.getWorld();
         Material block=world.getBlockAt(x,y,z).getType();
         switch (block){
             case KELP:
             case SEAGRASS:
+            case TALL_SEAGRASS:
             case SEA_PICKLE:
                 world.getBlockAt(x,y,z).breakNaturally();
                 world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
+                break;
             default:
                 ;
 
         }
-
     }
 
     @Override

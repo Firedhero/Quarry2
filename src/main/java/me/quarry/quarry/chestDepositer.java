@@ -32,15 +32,31 @@ public class chestDepositer implements Runnable {
      synchronized void deposit() throws InterruptedException, IOException {
         while (context.chestLocation==null)
             wait();
-        Material blockType=context.savedItems.takeFromItemHashMap();
-        if(blockType!=null) {
-            updateChestInventory(blockType);
-        }else {
-            wait();
-        }
-         deposit();
-    }
 
+        Material blockType=context.savedItems.takeFromItemHashMap();
+         while (!checkSpace(blockType))
+             wait();
+         if(blockType!=null) {
+            updateChestInventory(blockType);
+         }else {
+            wait();
+            deposit();
+         }
+
+    }
+    private boolean checkSpace(Material blockType){
+        final boolean[] isSpace = {false};
+        BukkitRunnable runner2=new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (checkChestSpace(blockType)) {
+                    isSpace[0] =true;
+                }
+            }
+
+        };runner2.runTask(context.context);
+        return isSpace[0];
+    }
     private void updateChestInventory(Material blockType) {
         BukkitRunnable runner2=new BukkitRunnable() {
             @Override
@@ -50,6 +66,7 @@ public class chestDepositer implements Runnable {
                     ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(blockType)), 1);
                     chest.getInventory().addItem(itemStack);
                 }
+
             }
         };runner2.runTask(context.context);
     }
@@ -84,16 +101,11 @@ public class chestDepositer implements Runnable {
         }
 
         boolean canContainitem = foundcount <= 0;
-        //-----------------------------------------------------------------------
+        //---------------------------end credit--------------------------------------------
         if(hasEmptySlot||canContainitem) {
             return true;
         }
         return false;
     }
-
-//    public void setThread(Thread depo) {
-//        this.thread=depo;
-//        this.thread.start();
-//    }
 
 }

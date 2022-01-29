@@ -20,7 +20,7 @@ public class eventListner implements Listener {
     private  Player user;
     private Location quarryLocation;
     private Location customLocation;
-    private Quarry quarryThis;
+    private final Quarry quarryThis;
     private Chunk breakChunk;
     private int id;
     minerData quarry;
@@ -103,13 +103,13 @@ public class eventListner implements Listener {
             quarry.setContext(quarryThis);
             if(quarryThis.map.map.isEmpty()){
 
-                quarry.setId(id);
+                quarry.setId(0);
             }else{
 //                int numberQuarries=0;
 //                for(int i=0;i<quarryThis.map.map.size();i++) {
 //                    numberQuarries = i;
 //                }
-                quarry.setId(quarryThis.map.map.size());
+                quarry.setId(quarryThis.map.map.size()-1);
             }
             quarry.setPlayer(user);
             quarryThis.map.map.put(quarryLocation,quarry);
@@ -174,8 +174,6 @@ public class eventListner implements Listener {
 
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& quarryThis.map.map.containsKey(event.getClickedBlock().getLocation())&& !itemName.equals(ChatColor.RED + "Marker")){//
             event.setCancelled(true);//cancels furnace menu
-            //TODO------------------------------------------
-
             minerData miner=quarryThis.map.map.get(event.getClickedBlock().getLocation());
             if(miner.isRunning){
                 user.sendMessage("You stopped a Quarry");
@@ -186,21 +184,18 @@ public class eventListner implements Listener {
                 miner.setRunning(true);
                 quarryThis.map.map.put(event.getClickedBlock().getLocation(),miner);
                 quarryThis.runMiner(miner.quarryLocation,miner.chunk,miner.Id);
-//                mineChun();
             }
-            //TODO-END--------------------------------------
         }
 
-
+//          TODO add namechanger to stick so once quarry is clicked name of marker changes to quarry it is UNCHANGEABLE
         if(itemName.equals(ChatColor.RED+"Marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& event.getClickedBlock().getType().equals(Material.CHEST)){
             user.sendMessage("you have marked chest for quarry dump");
+            event.setCancelled(true);
             markedChest=event.getClickedBlock().getLocation();
-
-//            quarryThis.map.setLinkedChest(event.getClickedBlock().getLocation());
         }
         if(itemName.equals(ChatColor.RED+"Marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& quarryThis.map.map.containsKey(event.getClickedBlock().getLocation())){
             user.sendMessage("you have marked quarry for chest at "+ markedChest);
-            Location markedQuarry=event.getClickedBlock().getLocation();
+            event.setCancelled(true);
             quarryThis.map.map.get(event.getClickedBlock().getLocation()).setChestLocation(markedChest);
             if(quarryThis.map.map.get(event.getClickedBlock().getLocation()).chestLocation!=null){
                 synchronized (quarryThis.map.map.get(event.getClickedBlock().getLocation()).depositer){

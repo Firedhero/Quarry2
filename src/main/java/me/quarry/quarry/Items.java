@@ -69,7 +69,7 @@ public class Items {
         recipe.setIngredient('P',Material.OBSIDIAN);
         Bukkit.addRecipe(recipe);
     }
-
+//    TODO add custom Quarry Id names for custom stick names
     private void addQuarry(Quarry context) {
         ItemStack quarry= new ItemStack(Material.FURNACE,1);
         ItemMeta meta= quarry.getItemMeta();
