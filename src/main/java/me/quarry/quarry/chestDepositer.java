@@ -3,12 +3,15 @@ package me.quarry.quarry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
+
+import static java.lang.Thread.sleep;
 
 public class chestDepositer implements Runnable {
     minerData context;
@@ -36,11 +39,12 @@ public class chestDepositer implements Runnable {
         Material blockType=context.savedItems.takeFromItemHashMap();
          while (!checkSpace(blockType))
              wait();
-         if(blockType!=null) {
-            updateChestInventory(blockType);
-         }else {
-            wait();
-            deposit();
+         while (blockType!=null){
+             updateChestInventory(blockType);
+             blockType=context.savedItems.takeFromItemHashMap();
+             sleep(500);
+             deposit();
+
          }
 
     }
@@ -57,7 +61,18 @@ public class chestDepositer implements Runnable {
         };runner2.runTask(context.context);
         return isSpace[0];
     }
-    private void updateChestInventory(Material blockType) {
+    public boolean runningQuarryDepositor(Block block){
+        if (checkChestSpace(block.getBlockData().getMaterial())) {
+            Chest chest = (Chest) context.chestLocation.getBlock().getState();
+            ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(block)), 1);
+            chest.getInventory().addItem(itemStack);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+    public void updateChestInventory(Material blockType) {
         BukkitRunnable runner2=new BukkitRunnable() {
             @Override
             public void run() {

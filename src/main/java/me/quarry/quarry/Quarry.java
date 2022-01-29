@@ -97,11 +97,14 @@ public final class Quarry extends JavaPlugin {
 
 
                 try {
-                    saveMinedItems(bloc, quarryLocation);
-                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null) {
-                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
-                            quarryThis.map.map.get(quarryLocation).depositer.notify();
-                        }
+
+                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null&&quarryThis.map.map.get(quarryLocation).depositer.runningQuarryDepositor(bloc)) {
+
+//                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
+//                            quarryThis.map.map.get(quarryLocation).depositer.notify();
+//                        }
+                    }else{
+                        saveMinedItems(bloc, quarryLocation);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
