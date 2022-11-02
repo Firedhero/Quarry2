@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import javax.swing.*;
@@ -144,6 +145,14 @@ public class eventListner implements Listener {
         }catch (Exception e){
             itemName="";
         }
+
+        if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&& itemName.equals(ChatColor.RED + "Quarry Chest")) {
+            event.setCancelled(true);
+            Inventory menu=Bukkit.createInventory(null,100,"Quarry Chest");
+
+        }
+
+
 
 //        TODO make most events if statments that call methoads to clean up bulk in click listner
 

@@ -4,19 +4,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+
 public class funStuff {
-    Quarry quarry;
+    Quarry context;
     funStuff(){
         
     }
     
-    funStuff(Quarry context){
-        quarry=context;
+    funStuff(Quarry quarry){
+        context=quarry;
         addStuffToServer();
     }
 
@@ -24,7 +27,28 @@ public class funStuff {
         addRedStoneChest();
         addFoodChest();
         addSuperPick();
+        addSuperChest();
         
+    }
+
+    private void addSuperChest() {
+        ItemStack chest= new ItemStack(Material.CHEST,1);
+        ItemMeta meta= chest.getItemMeta();
+        meta.setDisplayName(ChatColor.RED +"Quarry Chest");
+        ArrayList<String>lore=new ArrayList<>();
+        lore.add("This chest is for Quarry Deposit");
+        meta.setLore(lore);
+        chest.setItemMeta(meta);
+        NamespacedKey key=new NamespacedKey(context, "Quarry Chest");
+        ShapedRecipe recipe=new ShapedRecipe(key,chest);
+        recipe.shape(
+                "WWW",
+                "WCW",
+                "WWW"
+        );
+        recipe.setIngredient('C',Material.CHEST);
+        recipe.setIngredient('W',Material.OAK_WOOD);
+        Bukkit.addRecipe(recipe);
     }
 
     private void addSuperPick() {
@@ -41,7 +65,7 @@ public class funStuff {
         result.addEnchantment(Enchantment.DURABILITY,3);
         result.addEnchantment(Enchantment.LOOT_BONUS_BLOCKS,3);
 
-        NamespacedKey key=new NamespacedKey(quarry, "Big_Dig");
+        NamespacedKey key=new NamespacedKey(context, "Big_Dig");
 
         ShapedRecipe recipe=new ShapedRecipe(key,result);
         recipe.shape(

@@ -63,7 +63,7 @@ public class mineChunk extends Thread {
                             while (!quarry.map.map.get(quarryLocation).isRunning) {
                                 try {
 
-                                    sleep(500);
+                                    wait();
                                 } catch (InterruptedException e) {
     //                            e.printStackTrace();
                                 }
@@ -72,7 +72,7 @@ public class mineChunk extends Thread {
                             quarry.changeBlock(breakChunk, x, y, z,quarryLocation);
                             quarry.map.map.get(quarryLocation).setPos(x,y,z);
                             try {
-                                sleep(100);
+                                wait();
                             } catch (InterruptedException e) {
     //                            e.printStackTrace();
                             }
