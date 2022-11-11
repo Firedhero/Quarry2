@@ -72,7 +72,7 @@ public class mineChunk extends Thread {
                             quarry.changeBlock(breakChunk, x, y, z,quarryLocation);
                             quarry.map.map.get(quarryLocation).setPos(x,y,z);
                             try {
-                                wait();
+                                sleep(100);
                             } catch (InterruptedException e) {
     //                            e.printStackTrace();
                             }

@@ -1,5 +1,5 @@
 name: Quarry
 version: ${project.version}
 main: me.quarry.quarry.Quarry
-api-version: 1.13
+api-version: 1.19
 description: adds a quarry to mine a set area

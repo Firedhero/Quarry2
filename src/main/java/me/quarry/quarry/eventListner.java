@@ -20,12 +20,12 @@ public class eventListner implements Listener {
     private Location player;
     private  Player user;
     private Location quarryLocation;
-    private Location customLocation;
+
     private final Quarry quarryThis;
     private Chunk breakChunk;
     private int id;
     minerData quarry;
-    customData customQuarry;
+
 
     public eventListner(Quarry quarry) {
         quarryThis=quarry;
@@ -116,15 +116,6 @@ public class eventListner implements Listener {
             quarryThis.map.map.put(quarryLocation,quarry);
 
         }
-
-        if(meta.getItemMeta().getDisplayName().equals(ChatColor.RED+"Custom Quarry")){
-            customLocation=event.getBlock().getLocation();
-            customQuarry=new customData();
-            customQuarry.setQuarryLocation(customLocation);
-            quarryThis.custMap.map.put(customLocation,customQuarry);
-        }
-
-
     }
     @EventHandler
     public void exploded(BlockExplodeEvent event){
@@ -225,27 +216,7 @@ public class eventListner implements Listener {
             Bukkit.getServer().getWorld("world").getBlockAt(x,y+1,z).setType(Material.OAK_FENCE);
 
         }
-        if(itemName.equals(ChatColor.RED+"custom marker")&&event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&&event.getClickedBlock().getType().equals(Material.FURNACE)){
-            event.setCancelled(true);//cancels furnace menu
-            customData custMiner = quarryThis.custMap.map.get(event.getClickedBlock().getLocation());
-            if(custMiner.isRunning) {
-                user.sendMessage("You stopped a Quarry");
-                custMiner.setRunning(false);
-                quarryThis.custMap.map.put(event.getClickedBlock().getLocation(), custMiner);
-            }else{
-                if (!spots.isEmpty()&&spots.size()<=2) {
-                    custMiner.setRunning(true);
-                    custMiner.setMarkedSpots(spots);
-                    quarryThis.custMap.map.put(event.getClickedBlock().getLocation(), custMiner);
-//                    quarryThis.runCustom(event.getClickedBlock().getLocation());
-                    spots = new HashMap<>();
-                }else{
-                    user.sendMessage("You need to mark spots for the quarry to run");
-                }
 
-
-            }
-        }
 
     }
 

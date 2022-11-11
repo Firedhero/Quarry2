@@ -1,4 +1,3 @@
-me\quarry\quarry\mineCustom.class
 me\quarry\quarry\quarryMap.class
 me\quarry\quarry\Items.class
 me\quarry\quarry\customTextures.class
@@ -8,8 +7,6 @@ me\quarry\quarry\Quarry.class
 me\quarry\quarry\eventListner$1.class
 me\quarry\quarry\chestDepositer$1.class
 me\quarry\quarry\eventListner.class
-me\quarry\quarry\customData.class
-me\quarry\quarry\customMap.class
 me\quarry\quarry\Quarry$1.class
 me\quarry\quarry\Quarry$2.class
 me\quarry\quarry\chestDepositer$2.class
