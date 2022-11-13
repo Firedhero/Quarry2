@@ -3,16 +3,12 @@ package me.quarry.quarry;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.block.data.Waterlogged;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 
 public final class Quarry extends JavaPlugin {
@@ -30,6 +26,9 @@ public final class Quarry extends JavaPlugin {
         TODO save what player placed what quarry
          add a popup menu for what quarrys a player has placed
          add a way for player to pick which quarry from list instead of the stick
+
+        TODO add deletion of quarry from location map
+        TODO add saving of quarry Chest Location
          */
 
         // Plugin startup logic
@@ -41,6 +40,7 @@ public final class Quarry extends JavaPlugin {
         savedDataFilesExist();
 
         getServer().getPluginManager().registerEvents(new eventListner(quarryThis),this);
+
 
     }
 
@@ -66,15 +66,6 @@ public final class Quarry extends JavaPlugin {
 
         }
     }
-//    mineCustom customMiner;
-//    public void runCustom(Location quarryLoc){
-//
-//        this.customMiner=new mineCustom(this,quarryLoc);
-//        Thread thread=new Thread(this.customMiner);
-//        this.customMiner.setThread(thread);
-//        thread.start();
-//
-//    }
 
     //makes thread for a miner
     mineChunk miner;
@@ -96,14 +87,14 @@ public final class Quarry extends JavaPlugin {
 
                 try {
 
-                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null&&quarryThis.map.map.get(quarryLocation).depositer.runningQuarryDepositor(bloc)) {
-
-//                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
-//                            quarryThis.map.map.get(quarryLocation).depositer.notify();
-//                        }
-                    }else{
+//                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null) {
+//
+////                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
+////                            quarryThis.map.map.get(quarryLocation).depositer.notify();
+////                        }
+//                    }else{
                         saveMinedItems(bloc, quarryLocation);
-                    }
+//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -227,6 +218,7 @@ public final class Quarry extends JavaPlugin {
     void saveMinedItems(Block bloc,Location quarryLocation) throws IOException {
         //trying to grab the miner thats running to update its list
         quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
+        quarryThis.map.map.get(quarryLocation).menu.updateInventories(bloc.getType(), 1);
     }
 
     public void changeBlock(int x, int y, int z) {

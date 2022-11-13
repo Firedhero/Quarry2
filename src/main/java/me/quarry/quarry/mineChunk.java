@@ -29,8 +29,8 @@ public class mineChunk extends Thread {
 
     public void setRunning(boolean running) {
         isRunning = running;
-        if(running==true) {
-            thread.interrupt();
+        if(running) {
+            thread.notify();
         }
     }
 
@@ -57,8 +57,6 @@ public class mineChunk extends Thread {
             for (; x < 16; x++) {
                 for (; z < 16; z++) {
                     try {
-
-
                         if (quarry.map.map.get(quarryLocation) != null) {
                             while (!quarry.map.map.get(quarryLocation).isRunning) {
                                 try {

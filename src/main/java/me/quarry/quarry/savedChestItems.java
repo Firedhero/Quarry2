@@ -46,9 +46,8 @@ public  class  savedChestItems {
     public void setContext(minerData context) {
         this.context = context;
     }
-    //      TODO add synchornized Threads for saving to file and taking from file
-//            when chest has items withdrawn saving to file stops otherwise continues
-//              make joint file with a array of materials and the file is updated as the list is updated
+
+
 
     public void saveItemsToFile(int chestQuarryId, Block minedBlock) throws IOException {
         chestFile= new File("plugins/chestItems/inventoryForQuarry_" + chestQuarryId + ".txt");
@@ -58,24 +57,31 @@ public  class  savedChestItems {
             addToItemHashMap(minedBlock);
             writeToFileFromItemHashMap(bWriter);
         }
+        bWriter.close();
+        writer.close();
 
 
     }
-    private synchronized void addToItemHashMap(Block minedBlock){
+    private void addToItemHashMap(Block minedBlock){
         if(itemMap.get(changeType(minedBlock.getType()))!=null){
             int newCount=itemMap.get(changeType(minedBlock.getType()))+1;
+//            Bukkit.broadcastMessage("adding "+minedBlock.getType().toString()+":"+newCount);
             itemMap.put(changeType(minedBlock.getType()), newCount);
+//            context.menu.updateInventories(minedBlock.getType(),1);
         }else{
+//            Bukkit.broadcastMessage("adding "+minedBlock.getType().toString()+":"+1);
             itemMap.put(changeType(minedBlock.getType()),1);
+//            context.menu.updateInventories(minedBlock.getType(),1);
         }
     }
-    private synchronized void writeToFileFromItemHashMap(BufferedWriter bWriter) throws IOException {
+    private void writeToFileFromItemHashMap(BufferedWriter bWriter) throws IOException {
         for (Material material: itemMap.keySet()){
-            this.bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
+//            Bukkit.broadcastMessage(material.toString() + ","+itemMap.get(material).toString()+":");
+            bWriter.write(material.toString() + ","+itemMap.get(material).toString()+":");
         }
     }
 
-    public synchronized Material takeFromItemHashMap() throws IOException {
+    public Material takeFromItemHashMap() throws IOException {
         Iterator<Material> iter=itemMap.keySet().iterator();
         int count=0;
         Material material = null;
@@ -89,7 +95,7 @@ public  class  savedChestItems {
                 return material;
             }
         }
-        return null;
+        return Material.AIR;
     }
 
     private Material changeType(Material type) {
@@ -114,5 +120,9 @@ public  class  savedChestItems {
             default:
                 return false;
         }
+    }
+
+    public HashMap<Material, Integer> getHashMap() {
+        return itemMap;
     }
 }

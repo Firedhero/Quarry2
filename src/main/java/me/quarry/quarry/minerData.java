@@ -1,6 +1,5 @@
 package me.quarry.quarry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 
 import org.bukkit.Location;
@@ -8,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 
 public class minerData implements Serializable {
     public Location getQuarryLocation() {
@@ -70,8 +70,9 @@ public class minerData implements Serializable {
     Quarry context;
     savedChestItems savedItems=new savedChestItems();
     final chestDepositer depositer=new chestDepositer(this);
+    chestMenu menu=new chestMenu(this);
     minerData(){
-        savedItems.setContext(this);
+
     }
 
 
@@ -88,6 +89,7 @@ public class minerData implements Serializable {
     public void setChestLocation(Location chestLocation) {
 
        this.chestLocation=chestLocation;
+
     }
     public Location getChestLocation() {
 
@@ -96,6 +98,7 @@ public class minerData implements Serializable {
 
     public void setContext(Quarry quarry) {
         context=quarry;
+        context.getServer().getPluginManager().registerEvents(menu,context);
     }
     public Quarry getContext(){
         return context;
