@@ -68,11 +68,13 @@ public class minerData implements Serializable {
     Location quarryLocation;
     Chunk chunk;
     Quarry context;
-    savedChestItems savedItems=new savedChestItems();
-    final chestDepositer depositer=new chestDepositer(this);
-    chestMenu menu=new chestMenu(this);
+    savedChestItems savedItems;
+    final chestDepositer depositer;
+    chestMenu menu;
     minerData(){
-
+        menu=new chestMenu(this);
+        depositer=new chestDepositer(this);
+        savedItems=new savedChestItems(this);
     }
 
 
@@ -98,7 +100,7 @@ public class minerData implements Serializable {
 
     public void setContext(Quarry quarry) {
         context=quarry;
-        context.getServer().getPluginManager().registerEvents(menu,context);
+
     }
     public Quarry getContext(){
         return context;

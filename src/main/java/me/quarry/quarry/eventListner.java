@@ -110,7 +110,7 @@ public class eventListner implements Listener {
                 return;
             for (Map.Entry<Location,minerData> map:quarryThis.map.map.entrySet()) {
                 if(map.getValue().getChestLocation()!=null) {
-                    if (map.getValue().getChestLocation().equals(event.getInventory().getLocation())) {
+//                    if (map.getValue().getChestLocation().equals(event.getInventory().getLocation())) {
                         if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Forward")) {
                             event.setCancelled(true);
                             map.getValue().menu.forward((Player) event.getWhoClicked());
@@ -121,7 +121,7 @@ public class eventListner implements Listener {
                             map.getValue().menu.back((Player) event.getWhoClicked());
 
                         }
-                    }
+//                    }
                 }
 
                 }
@@ -149,8 +149,10 @@ public class eventListner implements Listener {
 
             if (isChest) {
                 event.setCancelled(true);
-                assert miner != null;
-                miner.menu.createInventory(event.getPlayer());
+//                Bukkit.broadcastMessage("opening inventory of "+miner.toString());
+                event.getPlayer().openInventory(miner.menu.chestInv.get(0));
+//                assert miner != null;
+//                miner.menu.createInventory(event.getPlayer());
             }
         }
     }

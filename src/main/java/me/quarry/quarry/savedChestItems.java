@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public  class  savedChestItems {
     File chestFile;
@@ -16,6 +17,9 @@ public  class  savedChestItems {
     private HashMap<Material, Integer> itemMap=new HashMap<Material,Integer>();
     minerData context;
 
+    savedChestItems(minerData miner){
+        context=miner;
+    }
     public void populateHashMap() {
         try {
 
@@ -27,12 +31,20 @@ public  class  savedChestItems {
                 for (int i = 0; i < items.length; i++) {
                     String[]parts=items[i].split(",");
                     itemMap.put(Material.getMaterial(String.valueOf(parts[0])), Integer.parseInt(parts[1]));
+                    context.menu.updateInventories(Material.getMaterial(String.valueOf(parts[0])),1);
                 }
 
             }
         }catch (Exception e){
 
         }
+//        try {
+//            for (Map.Entry<Material, Integer> i:itemMap.entrySet())
+//                context.menu.updateInventories(i.getKey(),1);
+//        }catch (Exception e){
+//
+//        }
+
 
     }
 
@@ -43,9 +55,7 @@ public  class  savedChestItems {
         populateHashMap();
     }
 
-    public void setContext(minerData context) {
-        this.context = context;
-    }
+
 
 
 
@@ -55,6 +65,8 @@ public  class  savedChestItems {
         bWriter=new BufferedWriter(writer);
         if(!checkUnwanted(minedBlock)) {
             addToItemHashMap(minedBlock);
+//            Bukkit.broadcastMessage("writing to inventory");
+//            Bukkit.broadcastMessage(context.toString());
             writeToFileFromItemHashMap(bWriter);
         }
         bWriter.close();
@@ -67,6 +79,7 @@ public  class  savedChestItems {
             int newCount=itemMap.get(changeType(minedBlock.getType()))+1;
 //            Bukkit.broadcastMessage("adding "+minedBlock.getType().toString()+":"+newCount);
             itemMap.put(changeType(minedBlock.getType()), newCount);
+            context.menu.updateInventories(minedBlock.getType(),1);
 //            context.menu.updateInventories(minedBlock.getType(),1);
         }else{
 //            Bukkit.broadcastMessage("adding "+minedBlock.getType().toString()+":"+1);

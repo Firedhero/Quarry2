@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class chestMenu implements Listener {
+public class chestMenu{
 
 
     minerData minerChest;
@@ -29,7 +29,7 @@ public class chestMenu implements Listener {
     }
 
     Inventory quarry;
-    LinkedList<Inventory> inventories=new LinkedList<>();
+//    LinkedList<Inventory> inventories=new LinkedList<>();
     LinkedList<Chest> chestList=new LinkedList<>();
     LinkedList<Inventory> chestInv=new LinkedList<>();
     ItemStack forwardButton;
@@ -270,30 +270,30 @@ public class chestMenu implements Listener {
         chestInv.add(temp);
 
     }
-    public void createInventory(Player p){
-        HashMap<Material, Integer> temp=minerChest.savedItems.getHashMap();
-        clonedItems.putAll(temp);
-
-        if(quarry==null) {
-            quarry = Bukkit.createInventory(p, 54, ChatColor.GOLD + "Chest Of Holding");
-
-        /*
-        0 0 0 0 0 0 0 0 0
-        0 0 0 0 0 0 0 0 0
-        0 0 0 0 0 0 0 0 0
-        0 0 0 0 0 0 0 0 0
-        45 0 0 0 0 0 0 0 53
-         */
-            makeButtons();
-            quarry.setItem(53, forwardButton);
-            quarry.setItem(45, backButton);
-            inventories.add(quarry);
-        }
-
-        makeInventories(p);
-        p.openInventory(inventories.get(0));
-
-    }
+//    public void createInventory(Player p){
+//        HashMap<Material, Integer> temp=minerChest.savedItems.getHashMap();
+//        clonedItems.putAll(temp);
+//
+//        if(quarry==null) {
+//            quarry = Bukkit.createInventory(p, 54, ChatColor.GOLD + "Chest Of Holding");
+//
+//        /*
+//        0 0 0 0 0 0 0 0 0
+//        0 0 0 0 0 0 0 0 0
+//        0 0 0 0 0 0 0 0 0
+//        0 0 0 0 0 0 0 0 0
+//        45 0 0 0 0 0 0 0 53
+//         */
+//            makeButtons();
+//            quarry.setItem(53, forwardButton);
+//            quarry.setItem(45, backButton);
+//            inventories.add(quarry);
+//        }
+//
+//        makeInventories(p);
+//        p.openInventory(inventories.get(0));
+//
+//    }
     int position=0;
     public void updateInventories(Material type, int i) {
         BukkitRunnable runner = new BukkitRunnable() {
@@ -302,16 +302,25 @@ public class chestMenu implements Listener {
                 boolean deposited=false;
 
                 int index=0;
-                while (!deposited) {
-                    if (checkChestSpace(type, index)) {
+                do {
+                    for(int i=0;i<chestList.size()-1;i++) {
+                        if (checkChestSpace(type, i)) {
+                            ItemStack itemStack = new ItemStack(type, 1);
+                            chestInv.get(index).addItem(itemStack);
+//                            Bukkit.broadcastMessage("deposited item in inventory "+index);
+                            deposited = true;
+                            break;
+                        } else {
+                            index++;
 
-                        deposited=true;
-                    } else{
-                        index++;
-                        Bukkit.broadcastMessage("made new chest");
+                        }
+                    }
+                    if(!deposited) {
+//                        Bukkit.broadcastMessage("made new chest");
                         createChest(index);
                     }
-                }
+//                    Bukkit.broadcastMessage("Finished Loop");
+                }while (!deposited);
 
 
             }
@@ -320,33 +329,33 @@ public class chestMenu implements Listener {
 
     }
 
-    private void makeInventories(Player p) {
-        //52 slots Available to fill with items
-        //64 max stack size
-        int index=0;
-        int size=0;
-        for(Map.Entry<Material, Integer> i:clonedItems.entrySet()){
-
-//            size++;
-            int count=i.getValue();
-            for(int it=0;it<count;it++) {
-                if (checkChestSpace(i.getKey(), index)) {
-                    ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(i.getKey())), 1);
-//                updateInventory(itemStack,iter);
-                    inventories.get(index).addItem(itemStack);
-//                    Bukkit.broadcastMessage(i.getKey().toString() + " " + (i.getValue() - 1));
-                    clonedItems.put(i.getKey(), i.getValue() - 1);
-                } else {
-                    index++;
-                    Inventory temp = Bukkit.createInventory(p, 54, ChatColor.GOLD + "Chest Of Holding");
-                    Bukkit.broadcastMessage("Making new Inventory");
-                    temp.setItem(53, forwardButton);
-                    temp.setItem(45, backButton);
-                    inventories.add(temp);
-                }
-            }
-        }
-    }
+//    private void makeInventories(Player p) {
+//        //52 slots Available to fill with items
+//        //64 max stack size
+//        int index=0;
+//        int size=0;
+//        for(Map.Entry<Material, Integer> i:clonedItems.entrySet()){
+//
+////            size++;
+//            int count=i.getValue();
+//            for(int it=0;it<count;it++) {
+//                if (checkChestSpace(i.getKey(), index)) {
+//                    ItemStack itemStack = new ItemStack(Material.getMaterial(String.valueOf(i.getKey())), 1);
+////                updateInventory(itemStack,iter);
+//                    inventories.get(index).addItem(itemStack);
+////                    Bukkit.broadcastMessage(i.getKey().toString() + " " + (i.getValue() - 1));
+//                    clonedItems.put(i.getKey(), i.getValue() - 1);
+//                } else {
+//                    index++;
+//                    Inventory temp = Bukkit.createInventory(p, 54, ChatColor.GOLD + "Chest Of Holding");
+//                    Bukkit.broadcastMessage("Making new Inventory");
+//                    temp.setItem(53, forwardButton);
+//                    temp.setItem(45, backButton);
+//                    inventories.add(temp);
+//                }
+//            }
+//        }
+//    }
 
     private boolean checkChestSpace(Material material,int index) {
 
@@ -386,16 +395,16 @@ public class chestMenu implements Listener {
     private int index=0;
     public void forward(Player p){
         position++;
-        if(position>=this.inventories.size())
+        if(position>=this.chestInv.size())
             position--;
-        Bukkit.broadcastMessage(String.valueOf(inventories.size()));
-        p.openInventory(this.inventories.get(position));
+//        Bukkit.broadcastMessage(String.valueOf(chestInv.size()));
+        p.openInventory(this.chestInv.get(position));
     }
     public void back(Player p){
         position--;
         if(position<=0)
             position=0;
-        p.openInventory(this.inventories.get(position));
+        p.openInventory(this.chestInv.get(position));
     }
 
     //TODO EVENT HANDLER DONT WORK
