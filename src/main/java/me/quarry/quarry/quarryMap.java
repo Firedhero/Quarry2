@@ -36,7 +36,7 @@ public class quarryMap {
 
                 // put key and value separated by a colon
                 bf.write(entry.getKey() + " ");
-                bo.write(entry.getValue().quarryLocation+":"+entry.getValue().getChunk().getX()+":"+entry.getValue().getChunk().getZ()+":"+ Arrays.toString(entry.getValue().getPos())+":"+entry.getValue().chestLocation+":"+entry.getValue().isRunning()+":"+entry.getValue().Id+":"+entry.getValue().player);
+                bo.write(entry.getValue().quarryLocation+":"+entry.getValue().getChunk().getX()+":"+entry.getValue().getChunk().getZ()+":"+ Arrays.toString(entry.getValue().getPos())+":"+entry.getValue().chestLocation+":"+entry.getValue().isRunning()+":"+entry.getValue().id+":"+entry.getValue().player);
                 // new line
                 bf.newLine();
                 bo.newLine();
@@ -135,13 +135,13 @@ public class quarryMap {
 
 
 
-                minerData miner=new minerData();
+
                 String minerData = bf.readLine();
                 String[] partsminer = minerData.split(":");
                 int chunkx=Integer.parseInt(partsminer[1]);
                 int chunkz=Integer.parseInt(partsminer[2]);
 
-                miner.setChunk(Bukkit.getServer().getWorld("world").getChunkAt(chunkx,chunkz));
+
 
                 String minerLoaction=partsminer[3];
                 minerLoaction=minerLoaction.replace("[","");
@@ -159,6 +159,11 @@ public class quarryMap {
 //                minerLoc.setZ(Double.parseDouble(z2[1]));
 
 //                4 chestlocation 5 running
+                String minerID=partsminer[6];
+                minerData miner=new minerData(minerID);
+                miner.setChunk(Bukkit.getServer().getWorld("world").getChunkAt(chunkx,chunkz));
+
+
                 String chestLoaction=partsminer[4];
                 if(!chestLoaction.equals("null")) {
                     String[] chestxyz = chestLoaction.split(",");
@@ -169,6 +174,9 @@ public class quarryMap {
                     miner.setChestLocation(chest);
                     chestLocations.put(chest,miner);
                 }
+
+
+
                 char a=' ';
                 miner.setRunning(Boolean.parseBoolean(partsminer[5]));
                 miner.setQuarryLocation(loc);

@@ -3,16 +3,12 @@ package me.quarry.quarry;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.block.data.Waterlogged;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 
 public final class Quarry extends JavaPlugin {
@@ -20,7 +16,6 @@ public final class Quarry extends JavaPlugin {
 
     Thread mine;
     quarryMap map=new quarryMap();
-    customMap custMap=new customMap();
 //    savedChestItems savedItems=new savedChestItems();
 
     @Override
@@ -29,8 +24,12 @@ public final class Quarry extends JavaPlugin {
 //      TODO add an automatic tree farmer possible another plugin
         /*
         TODO save what player placed what quarry
-         add a popup menu for what quarrys a player has placed
-         add a way for player to pick which quarry from list instead of the stick
+         (DONE)add a popup menu for what quarrys a player has placed
+         (DONE)add a way for player to pick which quarry from list instead of the stick
+         add persistent data to quarry so u can break them and the info persists
+
+        TODO add deletion of quarry from location map
+        TODO add saving of quarry Chest Location
          */
 
         // Plugin startup logic
@@ -39,11 +38,21 @@ public final class Quarry extends JavaPlugin {
         new Items(this);
 
         map=map.readMap();
-        custMap=custMap.readMap();
         savedDataFilesExist();
-
+        populateChestItems();
         getServer().getPluginManager().registerEvents(new eventListner(quarryThis),this);
 
+
+    }
+
+    private void populateChestItems() {
+        for(Map.Entry mapElement:quarryThis.map.map.entrySet()){
+            Location loc=(Location)mapElement.getKey();
+            minerData miner=quarryThis.map.map.get(loc);
+            File file = new File("plugins/chestItems/inventoryForQuarry_"+miner.id+".txt");
+            if(file.exists())
+                miner.savedItems.populateHashMap();
+        }
     }
 
     private void savedDataFilesExist() {
@@ -52,9 +61,7 @@ public final class Quarry extends JavaPlugin {
         File file2 = new File("plugins/hashMinerData.txt");
         if(file.exists()&& file2.exists())
             initializeRunningQuarrys();
-
     }
-
     private void initializeRunningQuarrys() {
         for(Map.Entry mapElement:quarryThis.map.map.entrySet()){
             Location loc=(Location)mapElement.getKey();
@@ -62,21 +69,9 @@ public final class Quarry extends JavaPlugin {
                 miner.setContext(quarryThis);
                 if(miner.isRunning){
                     quarryThis.runMiner(miner.quarryLocation,miner.chunk,miner.Id);
-//
                 }
-
-
         }
     }
-//    mineCustom customMiner;
-//    public void runCustom(Location quarryLoc){
-//
-//        this.customMiner=new mineCustom(this,quarryLoc);
-//        Thread thread=new Thread(this.customMiner);
-//        this.customMiner.setThread(thread);
-//        thread.start();
-//
-//    }
 
     //makes thread for a miner
     mineChunk miner;
@@ -90,9 +85,6 @@ public final class Quarry extends JavaPlugin {
     //connects to main thread to updates blocks
     public void changeBlock(Chunk chunl,int x,int y,int z,Location quarryLocation){
 
-//        TODO add liquid detection so it changes the blocks immediatly to the right of mined block and addes (stone/sponge)
-//         to prevent liquids from causing lag
-
         BukkitRunnable runner=new BukkitRunnable() {
             @Override
             public void run() {
@@ -100,17 +92,21 @@ public final class Quarry extends JavaPlugin {
 
 
                 try {
-                    saveMinedItems(bloc, quarryLocation);
-                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null) {
-                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
-                            quarryThis.map.map.get(quarryLocation).depositer.notify();
-                        }
-                    }
+
+//                    if (quarryThis.map.map.get(quarryLocation).getChestLocation()!=null) {
+//
+////                        synchronized (quarryThis.map.map.get(quarryLocation).depositer) {
+////                            quarryThis.map.map.get(quarryLocation).depositer.notify();
+////                        }
+//                    }else{
+                        saveMinedItems(bloc, quarryLocation);
+//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                detecWater(chunl, x, y, z);
+                detecBorderWater(chunl, x, y, z);
+                bloc.setType(Material.AIR);
 //                bloc.breakNaturally();
 
             }
@@ -120,15 +116,9 @@ public final class Quarry extends JavaPlugin {
 
     }
 //    TODO make the border before any mining happens to prevent unmined water
-    private void detecWater(Chunk chunk,int x, int y, int z) {
+    private void detecBorderWater(Chunk chunk,int x, int y, int z) {
         Block block;
         World world=chunk.getWorld();
-
-        if (chunk.getBlock(x,y,z).isLiquid()){
-            chunk.getBlock(x,y,z).setType(Material.AIR);
-        }
-
-
         //border detection
         Location location=chunk.getBlock(x,y,z).getLocation();
         int worldX= (int) location.getX();
@@ -138,56 +128,56 @@ public final class Quarry extends JavaPlugin {
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX-1,y,worldZ-1);
         }
         if (x==0){
             block=world.getBlockAt(worldX-1,y, worldZ);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX-1,y,worldZ);
         }
         if (x==15){
             block=world.getBlockAt(worldX+1,y,worldZ);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX+1,y,worldZ);
         }
         if (x==15&&z==0){
             block=world.getBlockAt(worldX+1,y,worldZ-1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX+1,y,worldZ-1);
         }
         if (z==0){
             block=world.getBlockAt(worldX,y,worldZ-1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX,y,worldZ-1);
         }
         if (z==15){
             block=world.getBlockAt(worldX,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX,y,worldZ+1);
         }
         if (z==15&&x==0){
             block=world.getBlockAt(worldX-1,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX-1,y,worldZ+1);
         }
         if(x==15&&z==15){
             block=world.getBlockAt(worldX+1,y,worldZ+1);
             if(block.isLiquid()){
                 block.setType(Material.COBBLESTONE);
             }
-            checkWaterLogged(chunk,worldX,y,worldZ);
+            checkWaterLogged(chunk,worldX+1,y,worldZ+1);
         }
 
     }
@@ -203,30 +193,38 @@ public final class Quarry extends JavaPlugin {
             world.getBlockAt(x,y,z).breakNaturally();
             world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
         }
+        checkWaterBlocks(chunk,x,y,z);
+
+
+    }
+
+    private void checkWaterBlocks(Chunk chunk, int x, int y, int z) {
+        World world=chunk.getWorld();
         Material block=world.getBlockAt(x,y,z).getType();
         switch (block){
             case KELP:
             case SEAGRASS:
+            case TALL_SEAGRASS:
             case SEA_PICKLE:
                 world.getBlockAt(x,y,z).breakNaturally();
                 world.getBlockAt(x,y,z).setType(Material.COBBLESTONE);
+                break;
             default:
                 ;
 
         }
-
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
         map.saveMap();
-        custMap.saveMap();
 
     }
     void saveMinedItems(Block bloc,Location quarryLocation) throws IOException {
         //trying to grab the miner thats running to update its list
-        quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
+        quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).id,bloc);
+//        quarryThis.map.map.get(quarryLocation).menu.updateInventories(bloc.getType(), 1);
     }
 
     public void changeBlock(int x, int y, int z) {

@@ -1,13 +1,15 @@
 package me.quarry.quarry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.inventory.Inventory;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Random;
 
 public class minerData implements Serializable {
     public Location getQuarryLocation() {
@@ -43,12 +45,10 @@ public class minerData implements Serializable {
     }
 
 
-    public int getintId() {
-        return Id;
-    }
 
-    public void setId(int id) {
-        Id = id;
+
+    public void setId(String newId) {
+        id = newId;
     }
 
     public boolean isRunning() {
@@ -68,17 +68,35 @@ public class minerData implements Serializable {
     Location quarryLocation;
     Chunk chunk;
     Quarry context;
-    savedChestItems savedItems=new savedChestItems();
-    final chestDepositer depositer=new chestDepositer(this);
-//    final Thread depo=new Thread(depositer);
+    savedChestItems savedItems;
+    final chestDepositer depositer;
+    chestMenu menu;
+    String id;
     minerData(){
-        savedItems.setContext(this);
-//        depo.start();
-//        depositer.setThread(depo);
+
+            StringBuilder sb = new StringBuilder(10);
+            String alphaBet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
+            for (int i = 0; i < 10; i++) {
+                int index = (int) (alphaBet.length() * Math.random());
+                sb.append(alphaBet.charAt(index));
+            }
+            id = sb.toString();
+
+        menu=new chestMenu(this);
+        depositer=new chestDepositer(this);
+        savedItems=new savedChestItems(this);
+
     }
-    public void noDepo(){
-//        depo.notify();
+    minerData(String defaultId){
+        id = defaultId;
+
+        menu=new chestMenu(this);
+        depositer=new chestDepositer(this);
+        savedItems=new savedChestItems(this);
+
+
     }
+
 
     public Player getPlayer() {
         return player;
@@ -93,6 +111,7 @@ public class minerData implements Serializable {
     public void setChestLocation(Location chestLocation) {
 
        this.chestLocation=chestLocation;
+
     }
     public Location getChestLocation() {
 
@@ -101,6 +120,7 @@ public class minerData implements Serializable {
 
     public void setContext(Quarry quarry) {
         context=quarry;
+
     }
     public Quarry getContext(){
         return context;
