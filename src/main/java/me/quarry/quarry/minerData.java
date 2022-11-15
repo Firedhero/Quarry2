@@ -4,10 +4,12 @@ import org.bukkit.Chunk;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.inventory.Inventory;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class minerData implements Serializable {
     public Location getQuarryLocation() {
@@ -43,12 +45,10 @@ public class minerData implements Serializable {
     }
 
 
-    public int getintId() {
-        return Id;
-    }
 
-    public void setId(int id) {
-        Id = id;
+
+    public void setId(String newId) {
+        id = newId;
     }
 
     public boolean isRunning() {
@@ -71,10 +71,30 @@ public class minerData implements Serializable {
     savedChestItems savedItems;
     final chestDepositer depositer;
     chestMenu menu;
+    String id;
     minerData(){
+
+            StringBuilder sb = new StringBuilder(10);
+            String alphaBet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
+            for (int i = 0; i < 10; i++) {
+                int index = (int) (alphaBet.length() * Math.random());
+                sb.append(alphaBet.charAt(index));
+            }
+            id = sb.toString();
+
         menu=new chestMenu(this);
         depositer=new chestDepositer(this);
         savedItems=new savedChestItems(this);
+
+    }
+    minerData(String defaultId){
+        id = defaultId;
+
+        menu=new chestMenu(this);
+        depositer=new chestDepositer(this);
+        savedItems=new savedChestItems(this);
+
+
     }
 
 

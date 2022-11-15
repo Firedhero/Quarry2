@@ -4,11 +4,11 @@ package me.quarry.quarry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public  class  savedChestItems {
     File chestFile;
@@ -19,11 +19,13 @@ public  class  savedChestItems {
 
     savedChestItems(minerData miner){
         context=miner;
+
     }
     public void populateHashMap() {
         try {
-
-            File file=new File("plugins/chestItems/inventoryForQuarry_" + context.getintId()+".txt");
+//            System.out.println("we working here");
+            File file=new File("plugins/chestItems/inventoryForQuarry_" + context.id+".txt");
+//            Bukkit.broadcastMessage("Chest id "+context.id);
             if (file.exists()) {
                 BufferedReader bf = new BufferedReader(new FileReader(file));
                 String itemsLine = bf.readLine();
@@ -31,7 +33,10 @@ public  class  savedChestItems {
                 for (int i = 0; i < items.length; i++) {
                     String[]parts=items[i].split(",");
                     itemMap.put(Material.getMaterial(String.valueOf(parts[0])), Integer.parseInt(parts[1]));
-                    context.menu.updateInventories(Material.getMaterial(String.valueOf(parts[0])),1);
+                    for (int j = 0; j < Integer.parseInt(parts[1]); j++) {
+//                        Bukkit.broadcastMessage("populating chest for quarry "+context.id);
+                        context.menu.updateInventories(Material.getMaterial(String.valueOf(parts[0])));
+                    }
                 }
 
             }
@@ -52,14 +57,14 @@ public  class  savedChestItems {
         File file= new File("plugins/chestItems");
         if (!file.exists())
             new File("plugins/chestItems").mkdirs();
-        populateHashMap();
+//        populateHashMap();
     }
 
 
 
 
-
-    public void saveItemsToFile(int chestQuarryId, Block minedBlock) throws IOException {
+//TODO change to get what would have dropped naturally
+    public void saveItemsToFile(String chestQuarryId, Block minedBlock) throws IOException {
         chestFile= new File("plugins/chestItems/inventoryForQuarry_" + chestQuarryId + ".txt");
         writer=new FileWriter("plugins/chestItems/inventoryForQuarry_"+chestQuarryId+".txt");
         bWriter=new BufferedWriter(writer);
@@ -74,12 +79,16 @@ public  class  savedChestItems {
 
 
     }
+    ItemStack pickaxe=new ItemStack(Material.DIAMOND_PICKAXE);
+
+
+
     private void addToItemHashMap(Block minedBlock){
         if(itemMap.get(changeType(minedBlock.getType()))!=null){
             int newCount=itemMap.get(changeType(minedBlock.getType()))+1;
 //            Bukkit.broadcastMessage("adding "+minedBlock.getType().toString()+":"+newCount);
             itemMap.put(changeType(minedBlock.getType()), newCount);
-            context.menu.updateInventories(minedBlock.getType(),1);
+            context.menu.updateInventories(minedBlock.getType());
 //            context.menu.updateInventories(minedBlock.getType(),1);
         }else{
 //            Bukkit.broadcastMessage("adding "+minedBlock.getType().toString()+":"+1);

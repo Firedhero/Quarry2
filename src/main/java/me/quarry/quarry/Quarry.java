@@ -24,8 +24,9 @@ public final class Quarry extends JavaPlugin {
 //      TODO add an automatic tree farmer possible another plugin
         /*
         TODO save what player placed what quarry
-         add a popup menu for what quarrys a player has placed
-         add a way for player to pick which quarry from list instead of the stick
+         (DONE)add a popup menu for what quarrys a player has placed
+         (DONE)add a way for player to pick which quarry from list instead of the stick
+         add persistent data to quarry so u can break them and the info persists
 
         TODO add deletion of quarry from location map
         TODO add saving of quarry Chest Location
@@ -38,10 +39,20 @@ public final class Quarry extends JavaPlugin {
 
         map=map.readMap();
         savedDataFilesExist();
-
+        populateChestItems();
         getServer().getPluginManager().registerEvents(new eventListner(quarryThis),this);
 
 
+    }
+
+    private void populateChestItems() {
+        for(Map.Entry mapElement:quarryThis.map.map.entrySet()){
+            Location loc=(Location)mapElement.getKey();
+            minerData miner=quarryThis.map.map.get(loc);
+            File file = new File("plugins/chestItems/inventoryForQuarry_"+miner.id+".txt");
+            if(file.exists())
+                miner.savedItems.populateHashMap();
+        }
     }
 
     private void savedDataFilesExist() {
@@ -50,9 +61,7 @@ public final class Quarry extends JavaPlugin {
         File file2 = new File("plugins/hashMinerData.txt");
         if(file.exists()&& file2.exists())
             initializeRunningQuarrys();
-
     }
-
     private void initializeRunningQuarrys() {
         for(Map.Entry mapElement:quarryThis.map.map.entrySet()){
             Location loc=(Location)mapElement.getKey();
@@ -60,10 +69,7 @@ public final class Quarry extends JavaPlugin {
                 miner.setContext(quarryThis);
                 if(miner.isRunning){
                     quarryThis.runMiner(miner.quarryLocation,miner.chunk,miner.Id);
-//
                 }
-
-
         }
     }
 
@@ -217,7 +223,7 @@ public final class Quarry extends JavaPlugin {
     }
     void saveMinedItems(Block bloc,Location quarryLocation) throws IOException {
         //trying to grab the miner thats running to update its list
-        quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).getintId(),bloc);
+        quarryThis.map.map.get(quarryLocation).savedItems.saveItemsToFile(quarryThis.map.map.get(quarryLocation).id,bloc);
 //        quarryThis.map.map.get(quarryLocation).menu.updateInventories(bloc.getType(), 1);
     }
 

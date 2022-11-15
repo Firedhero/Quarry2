@@ -28,18 +28,18 @@ public class funStuff {
         addFoodChest();
         addSuperPick();
         addSuperChest();
-        
+
     }
 
     private void addSuperChest() {
         ItemStack chest= new ItemStack(Material.CHEST,1);
         ItemMeta meta= chest.getItemMeta();
-        meta.setDisplayName(ChatColor.RED +"Quarry Chest");
+        meta.setDisplayName(ChatColor.RED +"Super Chest");
         ArrayList<String>lore=new ArrayList<>();
-        lore.add("This chest is for Quarry Deposit");
+        lore.add("This chest is Super");
         meta.setLore(lore);
         chest.setItemMeta(meta);
-        NamespacedKey key=new NamespacedKey(context, "Quarry Chest");
+        NamespacedKey key=new NamespacedKey(context, "Super Chest");
         ShapedRecipe recipe=new ShapedRecipe(key,chest);
         recipe.shape(
                 "WWW",

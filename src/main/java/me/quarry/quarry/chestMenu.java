@@ -257,14 +257,15 @@ public class chestMenu{
     }
     public void createChest(int index){
         chestList.add(makeChest());
-        Inventory temp=Bukkit.createInventory(chestList.get(index), 54, ChatColor.GOLD + "Chest Of Holding");
+        Inventory temp=Bukkit.createInventory(chestList.get(index), 54, ChatColor.GOLD + "Chest Of Holding ID "+minerChest.id);
         temp.setItem(53, forwardButton);
         temp.setItem(45, backButton);
         chestInv.add(temp);
     }
     public void initialChest(){
         chestList.add(makeChest());
-        Inventory temp=Bukkit.createInventory(chestList.get(0), 54, ChatColor.GOLD + "Chest Of Holding");
+        Bukkit.broadcastMessage(minerChest.id);
+        Inventory temp=Bukkit.createInventory(chestList.get(0), 54, ChatColor.GOLD + "Chest Of Holding ID "+minerChest.id);
         temp.setItem(53, forwardButton);
         temp.setItem(45, backButton);
         chestInv.add(temp);
@@ -295,27 +296,28 @@ public class chestMenu{
 //
 //    }
     int position=0;
-    public void updateInventories(Material type, int i) {
+    public synchronized void updateInventories(Material type) {
         BukkitRunnable runner = new BukkitRunnable() {
             @Override
             public void run() {
                 boolean deposited=false;
 
-                int index=0;
+                int index=chestList.size();
                 do {
                     for(int i=0;i<chestList.size()-1;i++) {
                         if (checkChestSpace(type, i)) {
                             ItemStack itemStack = new ItemStack(type, 1);
-                            chestInv.get(index).addItem(itemStack);
+                            chestInv.get(i).addItem(itemStack);
 //                            Bukkit.broadcastMessage("deposited item in inventory "+index);
                             deposited = true;
                             break;
                         } else {
-                            index++;
 
                         }
                     }
+
                     if(!deposited) {
+                        index++;
 //                        Bukkit.broadcastMessage("made new chest");
                         createChest(index);
                     }
@@ -395,7 +397,7 @@ public class chestMenu{
     private int index=0;
     public void forward(Player p){
         position++;
-        if(position>=this.chestInv.size())
+        if(position>this.chestInv.size()-1)
             position--;
 //        Bukkit.broadcastMessage(String.valueOf(chestInv.size()));
         p.openInventory(this.chestInv.get(position));
